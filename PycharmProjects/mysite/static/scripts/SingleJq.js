@@ -1,6 +1,4 @@
 
-
-doucumet.
         var colors = ['#5793f3', '#d14a61', '#675bba'];
         var myChart = echarts.init(document.getElementById('main'));
         var myChartone = echarts.init(document.getElementById('main1'));

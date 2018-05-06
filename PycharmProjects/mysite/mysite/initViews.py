@@ -1,4 +1,5 @@
-from __future__ import unicode_literals
+
+from __future__ import unicode_literals #版本的兼容性
 import pandas as pd
 import mysql.connector
 import re
@@ -17,9 +18,9 @@ import  csv
 # client = pymongo.MongoClient('10.66.93.125',27017)
 
 # database = client['dspider2']
-
-shops_data = DataFrame(pd.read_csv(u'/Users/hcnucai/Desktop/Lab421/shops_data_54.csv',sep = ' '));
-comments_data = DataFrame(pd.read_csv(u'/Users/hcnucai/Desktop/Lab421/comments_data_54.csv',sep = ' '));
+#读入数据
+shops_data = DataFrame(pd.read_csv('/Users/hcnucai/Desktop/Lab421/shops_data_54.csv',sep = ' '));
+comments_data = DataFrame(pd.read_csv('/Users/hcnucai/Desktop/Lab421/comments_data_54.csv',sep = ' '));
 #dframe1 = pd.read_excel("/Users/hcnucai/Desktop/Lab421/comment_data\(UTF-8\)5.4.xlsx",sheetname="Sheet1");
 
 # print(comments_tb);
@@ -83,7 +84,7 @@ def comments_convert(data):
 def shops_convert(data):
     data['shop_name'] = data['shop_name'].apply(change1)
     data['newname'] = data['shop_name'].apply(rename)
-    name = data['newname'].value_counts().index
+    name = data['newname'].value_counts().index #记录频数
     all = []
     for i in range(len(name)):
         a = data[data['newname']==name[i]]
@@ -281,12 +282,19 @@ class Ways():
                 score_message[b.iloc[i, 0]][b.iloc[i, 1]][b.iloc[i, 2]] = b.iloc[i, 3]
         return score_message
 
+
+
+
 comments_data = comments_convert(comments_data)
 shops_data = shops_convert(shops_data)
 jingqu_comments = comments_data[(comments_data['data_source']=='景点')&(comments_data['data_region']=='千岛湖')]
 jingqu_shops = shops_data[(shops_data['data_source']=='景点')&(shops_data['data_region']=='千岛湖')]
 jingqu = Ways(jingqu_comments,jingqu_shops)
-
+comments_data;
+shops_data;
+jingqu_comments;
+jingqu_shops;
+jingqu;
 def get_pingtai(pingtai,a,b,num):
     pt_shops = a[a['data_website']==pingtai[num]]
     pt_comments = b[b['data_website']==pingtai[num]]
@@ -298,170 +306,14 @@ def get_pingjia(a):
     a.setdefault('好评', 0)
     return a
 
-def kindjq(request):
-    global name
-    if request.is_ajax():
-     #   print(name)
-        jingqu_comments = comments_data[
-            (comments_data['data_source'] == '景点') & (comments_data['data_region'] == name)]
-        jingqu_shops = shops_data[(shops_data['data_source'] == '景点') & (shops_data['data_region'] == name)]
-      #  print(len(jingqu_shops))
-        jingqu = Ways(jingqu_comments, jingqu_shops)
-        haoping = []
-        zhongping = []
-        chaping = []
-        pingtai = request.POST.getlist('pingtai')
-        year = request.POST.get('year')
-        month = request.POST.getlist('month')
-        dict = {}
-        if len(eval(pingtai[0]))==1:
-            pt_jingqu = get_pingtai(eval(pingtai[0]),jingqu_shops,jingqu_comments,0)
-            list1,list2 = pt_jingqu.get_all_month()
-            dict['month'] = list1
-            dict['month_number'] = list2
-            dict = eval(repr(dict))
-        else:
-            number = len(eval(pingtai[0]))
-            dict['month_number'] = []
-            for i in range(number):
-                pt_jingqu = get_pingtai(eval(pingtai[0]),jingqu_shops,jingqu_comments,i)
-                list1,list2 = pt_jingqu.get_all_month()
-                dict['month'] = list1
-                dict['month_number'].append(list2)
-        score = jingqu.get_score_month()
-        for i in range(len(eval(month[0]))):
-            month_choose = score[int(year)][int(eval(month[0])[i])]
-            month_choose = get_pingjia(month_choose)
-            haoping.append(month_choose['好评'])
-            zhongping.append(month_choose['中评'])
-            chaping.append(month_choose['差评'])
-        dict['haoping'] = haoping
-        dict['zhongping'] = zhongping
-        dict['chaping'] = chaping
-        score2 = jingqu.get_score_day()
-        year_month = jingqu.get_all_year_month()
-       # print(dict)
-        dict = eval(repr(dict))
-        return JsonResponse(dict)
-    else:
-        name = request.POST['name']
-        jingqu_comments = comments_data[
-            (comments_data['data_source'] == '景点') & (comments_data['data_region'] == name)]
-        jingqu_shops = shops_data[(shops_data['data_source'] == '景点') & (shops_data['data_region'] == name)]
-        jingqu = Ways(jingqu_comments, jingqu_shops)
-        list1, list2 = jingqu.get_all_month()
-        list3, list4 = jingqu.get_all_year()
-        list5, list6 = jingqu.get_all_week()
-        list7, list8 = jingqu.get_all_day()
-        list7 = list7[-15:]
-        list8 = list8[-15:]
-        return render(request,'kindjq.html',{
-            'name': name,
-            'list1': json.dumps(list1),
-            'list2': list2,
-            'list3': json.dumps(list3),
-            'list4': list4,
-            'list5': json.dumps(list5),
-            'list6': list6,
-            'list7': json.dumps(list7),
-            'list8': list8,
-        })
+
 def index(request):
     return render(request, 'singlejq.html', {
     })
-def singlejq(request):
-    choosetime = request.POST.getlist('time')
-    name = request.POST['name']
-    if len(name)>=5:
-        newname=name[0:5]
-    else:
-        newname=name
-    print(newname);
-    year = request.POST['year']
-    month = request.POST['month']
-    date = []
-    haoping = []
-    zhongping = []
-    chaping = []
-    if choosetime[0] == 'yue':
-        dict1 = jingqu.get_month()
-        list1 = dict1[newname][0]
-        list2 = dict1[newname][1]
-    elif choosetime[0] == 'zhou':
-        dict1 = jingqu.get_week()
-        list1 = dict1[newname][0]
-        list2 = dict1[newname][1]
-    elif choosetime[0] == 'tian':
-        dict1 = jingqu.get_day()
-        list1 = dict1[newname][0][-15:]  # 只取最近15天的数据
-        list2 = dict1[newname][1][-15:]
-    elif choosetime[0] == 'nian':
-        dict1 = jingqu.get_year()
-        list1 = dict1[newname][0]
-        list2 = dict1[newname][1]
-    dict2, dict3 = jingqu.get_message()
-    list3 = dict2[newname]
-    list4 = dict3[newname];
-    message = dict(zip(list4,list3))
-    dict4 = jingqu.get_score_message()
-    list5 = sorted(dict4[newname].items(),key=lambda d:d[0])
-    for i,j in enumerate(list5):
-        if j[0][0:4]==year and j[0][5:7]==month:
-            date.append(j[0])
-            j[1].setdefault('差评',0)
-            j[1].setdefault('中评',0)
-            j[1].setdefault('好评',0)
-            haoping.append(j[1]['好评'])
-            zhongping.append(j[1]['中评'])
-            chaping.append(j[1]['差评'])
-    return render(request, 'singlejq.html', {
-        #'name': json.dumps(name),
-        'list1': json.dumps(list1),
-        'list2': list2,
-        'message': message,
-        'list3':date,
-        'list4':chaping,
-        'list5':zhongping,
-        'list6':haoping,
-        })
+
 def indexall(request):
     return render(request,'all.html',{})
 
-def alljq(request):
-    if request.is_ajax():
-        dict = {}
-        name = request.POST.getlist('jq')
-        year = request.POST.get('year')
-        month = request.POST.getlist('month')
-        name = eval(name[0])
-        month = eval(month[0])
-        for i,j in enumerate(name):
-            haoping = []
-            zhongping = []
-            chaping = []
-            dict[j] = {}
-            jingqu_comments = comments_data[
-                (comments_data['data_source'] == '景点') & (comments_data['data_region'] == j)]
-            jingqu_shops = shops_data[(shops_data['data_source'] == '景点') & (shops_data['data_region'] == j)]
-            jingqu = Ways(jingqu_comments, jingqu_shops)
-            list1,list2 = jingqu.get_all_month()
-            dict[j]['month'] = list1
-            dict[j]['month_number'] = list2
-            score = jingqu.get_score_month()
-      #      print(score)
-            for k in range(len(month)):
-                month_choose = score[int(year)][int(month[k])]
-                month_choose = get_pingjia(month_choose)
-                haoping.append(month_choose['好评'])
-                zhongping.append(month_choose['中评'])
-                chaping.append(month_choose['差评'])
-            dict[j]['haoping'] = haoping
-            dict[j]['zhongping'] = zhongping
-            dict[j]['chaping'] = chaping
-        dict = eval(repr(dict))
-        return JsonResponse(dict)
-    else:
-        return render(request,'alljq.html')
 
 
 

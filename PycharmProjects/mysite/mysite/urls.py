@@ -16,14 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
-from . import views
-
+from . import initViews
+from .Views.ViewsSingleJq import singlejq
+from .Views.ViewsAllJq import alljq
+from .Views.ViewsKindJq import kindjq
 urlpatterns = [
     url(r'^admin',admin.site.urls),
-    url(r'^index$',views.index,name='index'),
-    url(r'^singlejq$',views.singlejq,name='singlejq'),
-    url(r'^kindjq$',views.kindjq,name='kindjq'),
-    url(r'^alljq$',views.alljq,name='alljq'),
+    url(r'^index$',initViews.index,name='index'),
+    url(r'^singlejq$',singlejq,name='singlejq'),
+    url(r'^kindjq$',kindjq,name='kindjq'),
+    url(r'^alljq$',alljq,name='alljq'),
     #url(r'^index2$',views.index2,name='index2'),
-    url(r'^indexall$',views.indexall,name='indexall'),
+    url(r'^indexall$',initViews.indexall,name='indexall'),
 ]
