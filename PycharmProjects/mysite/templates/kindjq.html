@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="../static/echarts.js"></script>
+    <script src="../static/jquery-3.3.1.min.js"></script>
+    <script src = "../scripts//kindjq.js"></script>
+    <style type="text/css">
+    .mydiv{
+     margin:0 auto;
+    }
+    p{
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    h1{ text-align:center; }
+    </style>
+</head>
+<body>
+<h1>{{name}}</h1>
+<div id="main1" class='mydiv' style="width: 700px;height:400px;"></div>
+<div id="main2" class='mydiv' style="width: 700px;height:400px;"></div>
+<div id="main3" class='mydiv' style="width: 700px;height:400px;"></div>
+<div id="main4" class='mydiv' style="width: 700px;height:400px;"></div>
+    <form action="/kindjq" method="POST">
+        {% csrf_token %}
+        <select id="year" name="year">
+                <option value="2018">2018</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+        </select>
+        {% comment %}<select id="month" name="month">
+                <option value="01">1</option>
+                <option value="02">2</option>
+                <option value="03">3</option>
+                <option value="04">4</option>
+                <option value="05">5</option>
+                <option value="06">6</option>
+                <option value="07">7</option>
+                <option value="08">8</option>
+                <option value="09">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+        </select>
+        <select id="pingtai" name="pingtai">
+                <option value="携程">携程</option>
+                <option value="大众点评">大众点评</option>
+                <option value="驴妈妈">驴妈妈</option>
+                <option value="飞猪">飞猪</option>
+                <option value="途牛">途牛</option>
+                <option value="马蜂窝">马蜂窝</option>
+                <option value="去哪儿">去哪儿</option>
+                <option value="艺龙">艺龙</option>
+        </select>{% endcomment %}
+        <div>
+        <p><input type="checkbox" id="month" name="month" value="01">1</p>
+        <p><input type="checkbox" id="month" name="month" value="02">2</p>
+        <p><input type="checkbox" id="month" name="month" value="03">3</p>
+        <p><input type="checkbox" id="month" name="month" value="04">4</p>
+        <p><input type="checkbox" id="month" name="month" value="05">5</p>
+        <p><input type="checkbox" id="month" name="month" value="06">6</p>
+        <p><input type="checkbox" id="month" name="month" value="07">7</p>
+        <p><input type="checkbox" id="month" name="month" value="08">8</p>
+        <p><input type="checkbox" id="month" name="month" value="09">9</p>
+        <p><input type="checkbox" id="month" name="month" value="10">10</p>
+        <p><input type="checkbox" id="month" name="month" value="11">11</p>
+        <p><input type="checkbox" id="month" name="month" value="12">12</p>
+        </div>
+        <div>
+        <p><input type="checkbox" id="pingtai" name="pingtai" value="携程">携程</p>
+        <p><input type="checkbox" id="pingtai" name="pingtai" value="去哪儿">去哪儿</p>
+        <p><input type="checkbox" id="pingtai" name="pingtai" value="驴妈妈">驴妈妈</p>
+        <p><input type="checkbox" id="pingtai" name="pingtai" value="马蜂窝">马蜂窝</p>
+        <p><input type="checkbox" id="pingtai" name="pingtai" value="途牛">途牛</p>
+        <p><input type="checkbox" id="pingtai" name="pingtai" value="大众点评">大众点评</p>
+        <p><input type="checkbox" id="pingtai" name="pingtai" value="飞猪">飞猪</p>
+        </div>
+        <input id="tijiao" type="submit" value="提交"/>
+    </form>
+<div id="result1" class='mydiv' style="width: 600px;height:400px;"></div>
+<div id="result2" class='mydiv' style="width: 600px;height:400px;"></div>
+ <script type="text/javascript">
+ 
+    </script>
+</body>
+</html>

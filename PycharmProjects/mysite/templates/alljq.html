@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="../static/echarts.js"></script>
+    <script src="../static/jquery-3.3.1.min.js"></script>
+     <script src = "../scripts/all.js"></script>
+    <style type="text/css">
+    .mydiv{
+     margin:0 auto;
+    }
+    p{
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    h1{ text-align:center; }
+    </style>
+</head>
+<body>
+    <form action="/alljq" method="POST">
+        {% csrf_token %}
+        <div>
+        <p><input type="checkbox" id="jq" name="jq" value="千岛湖">千岛湖</p>
+        <p><input type="checkbox" id="jq" name="jq" value="西湖">西湖</p>
+        </div>
+         <select id="year" name="year">
+                <option value="2018">2018</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+        </select>
+        <div>
+        <p><input type="checkbox" id="month" name="month" value="01">1</p>
+        <p><input type="checkbox" id="month" name="month" value="02">2</p>
+        <p><input type="checkbox" id="month" name="month" value="03">3</p>
+        <p><input type="checkbox" id="month" name="month" value="04">4</p>
+        <p><input type="checkbox" id="month" name="month" value="05">5</p>
+        <p><input type="checkbox" id="month" name="month" value="06">6</p>
+        <p><input type="checkbox" id="month" name="month" value="07">7</p>
+        <p><input type="checkbox" id="month" name="month" value="08">8</p>
+        <p><input type="checkbox" id="month" name="month" value="09">9</p>
+        <p><input type="checkbox" id="month" name="month" value="10">10</p>
+        <p><input type="checkbox" id="month" name="month" value="11">11</p>
+        <p><input type="checkbox" id="month" name="month" value="12">12</p>
+        </div>
+        <input id="tijiao" type="submit" value="提交"/>
+    </form>
+    <h1>{{name}}</h1>
+<div id="main1" class='mydiv' style="width: 700px;height:400px;"></div>
+
+</body>
+</html>

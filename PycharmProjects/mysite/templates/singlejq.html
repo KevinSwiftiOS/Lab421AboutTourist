@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="static/echarts.js"></script>
+    <script src = "../scripts/singljq.js"></script>
+    <style type="text/css">
+    .mydiv{
+     margin:0 auto;
+    }
+    p{
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    h1{ text-align:center; }
+    </style>
+</head>
+<body>
+<h1>千岛湖各个景区变化及其信息</h1>
+    <form action="/singlejq" method="POST">
+        {% csrf_token %}
+        <p>
+            <input id="name" type="text" name="name"  />
+        </p>
+        <select id="year" name="year">
+                <option value="2018">2018</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+        </select>
+        <select id="month" name="month">
+                <option value="01">1</option>
+                <option value="02">2</option>
+                <option value="03">3</option>
+                <option value="04">4</option>
+                <option value="05">5</option>
+                <option value="06">6</option>
+                <option value="07">7</option>
+                <option value="08">8</option>
+                <option value="09">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+        </select>
+        <p><input type="checkbox" id="time" name="time" value="nian">年</p>
+        <p><input type="checkbox" id="time" name="time" value="yue">月</p>
+        <p><input type="checkbox" id="time" name="time" value="zhou">周(最近四周)</p>
+        <p><input type="checkbox" id="time" name="time" value="tian">天(最近15天)</p>
+        <input id="tijiao" type="submit" value="提交"/>
+    </form>
+    <div class='mydiv' id="meassage">
+    {% for key,value in message.items%}
+　　　   <p>{{ key }}</p>
+        <p>{{ value }}</p>
+    {% endfor %}
+    </div>
+<p>{{ jianyan }}</p>
+    <div id="main" class='mydiv' style="width: 600px;height:400px;"></div>
+    <div id="main1" class='mydiv' style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+
+    </script>
+</body>
+</html>
