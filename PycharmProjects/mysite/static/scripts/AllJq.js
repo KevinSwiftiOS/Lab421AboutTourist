@@ -18,6 +18,7 @@
                type: "POST",
                data: {'jq': JSON.stringify(jq),'year':year,'month':JSON.stringify(month)},
                success: function (data) {
+
                    var myChartone = echarts.init(document.getElementById('main1'));
                    var Item = function () {
                        return {

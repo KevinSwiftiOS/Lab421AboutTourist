@@ -1,4 +1,4 @@
-$("#tijiao").click(function () {
+$("#submit").click(function () {
     var year = $("#year").val();
     var month = [];
     var pingtai = [];
@@ -19,6 +19,8 @@ $("#tijiao").click(function () {
             type:"POST",
             data:{'pingtai':JSON.stringify(pingtai),'year':year,'month':JSON.stringify(month)},
             success:function (data) {
+            console.log(56789);
+            console.log(data);
                 var Item = function () {
                     return {
                         name:'',

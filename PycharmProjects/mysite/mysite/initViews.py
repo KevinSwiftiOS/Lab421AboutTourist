@@ -19,8 +19,8 @@ import  csv
 
 # database = client['dspider2']
 #读入数据
-shops_data = DataFrame(pd.read_csv('/Users/hcnucai/Desktop/Lab421/shops_data_54.csv',sep = ' '));
-comments_data = DataFrame(pd.read_csv('/Users/hcnucai/Desktop/Lab421/comments_data_54.csv',sep = ' '));
+shops_data = DataFrame(pd.read_csv('/Users/hcnucai/Documents/github/Lab421AboutTourist/shops_data_54.csv',sep = ' '));
+comments_data = DataFrame(pd.read_csv('/Users/hcnucai/Documents/github/Lab421AboutTourist/comments_data_54.csv',sep = ' '));
 #dframe1 = pd.read_excel("/Users/hcnucai/Desktop/Lab421/comment_data\(UTF-8\)5.4.xlsx",sheetname="Sheet1");
 
 # print(comments_tb);
@@ -197,13 +197,18 @@ class Ways():
         return all
 
     def get_month(self):#评论数量随月的变化
+        flag = 0;
         all = {}
         for i in range(len(self.jingqu_name)):
             all[self.jingqu_name[i]] = []
             a = self.comments[self.comments['newname'] == self.jingqu_name[i]]
+
             b = a['month'].value_counts().sort_index()
+
+
             all[self.jingqu_name[i]].append(list(b.index))
             all[self.jingqu_name[i]].append(list(b.values))
+
         return all
 
     def get_day(self):#评论数量随天的变化
@@ -281,7 +286,8 @@ class Ways():
                     score_message[b.iloc[i, 0]][b.iloc[i, 1]]:
                 score_message[b.iloc[i, 0]][b.iloc[i, 1]][b.iloc[i, 2]] = b.iloc[i, 3]
         return score_message
-
+    def get_all_name(self): #获取所有的景区名字
+        return self.jingqu_name;
 
 
 

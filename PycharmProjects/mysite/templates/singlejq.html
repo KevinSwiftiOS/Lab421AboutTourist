@@ -4,9 +4,16 @@
     <meta charset="utf-8">
     <title>ECharts</title>
     <!-- 引入 echarts.js -->
-    <script src="static/libs/echarts.js"></script>
-    <script src = "static/libs/jquery-3.3.1.min.js"></script>
-    <script src = "static/scripts/SingleJq.js"></script>
+      <link href="../static/libs/boostrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../static/libs/boostrap/css/font-awesome.min.css" rel="stylesheet">
+
+ <link rel="stylesheet" href="../static/libs/sweetalert/dist/sweetalert.css">
+    <script src="../static/libs/echarts.js"></script>
+    <script src="../static/libs/jquery-3.3.1.min.js"></script>
+
+     <script src="../static/libs/boostrap/bootstrap.min.js"></script>
+  <script src = "../static/libs/sweetalert/dist/sweetalert.min.js"></script>
+
 
     <style type="text/css">
     .mydiv{
@@ -45,21 +52,19 @@
                 <option value="11">11</option>
                 <option value="12">12</option>
         </select>
-        <p><input type="checkbox" id="time" name="time" value="nian">年</p>
-        <p><input type="checkbox" id="time" name="time" value="yue">月</p>
-        <p><input type="checkbox" id="time" name="time" value="zhou">周(最近四周)</p>
-        <p><input type="checkbox" id="time" name="time" value="tian">天(最近15天)</p>
-        <input id="tijiao" type="submit" value="提交"/>
+        <p><input type="radio" id="time" name="time" value="nian">年</p>
+        <p><input type="radio" id="time" name="time" value="yue">月</p>
+        <p><input type="radio" id="time" name="time" value="zhou">周(最近四周)</p>
+        <p><input type="radio" id="time" name="time" value="tian">天(最近15天)</p>
+        <input id="submit" type="submit" value="提交"/>
     </form>
-    <div class='mydiv' id="meassage">
-    {% for key,value in message.items%}
-　　　   <p>{{ key }}</p>
-        <p>{{ value }}</p>
-    {% endfor %}
-    </div>
-<p>{{ jianyan }}</p>
+<div class='mydiv' id="meassage">
+
+</div>
+
     <div id="main" class='mydiv' style="width: 600px;height:400px;"></div>
     <div id="main1" class='mydiv' style="width: 600px;height:400px;"></div>
 
+    <script src = "../static/scripts/SingleJq.js"></script>
 </body>
 </html>
