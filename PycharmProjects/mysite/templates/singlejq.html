@@ -1,70 +1,136 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8">
-    <title>ECharts</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>千岛湖景区</title>
     <!-- 引入 echarts.js -->
-      <link href="../static/libs/boostrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../static/libs/boostrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../static/libs/boostrap/css/font-awesome.min.css" rel="stylesheet">
 
- <link rel="stylesheet" href="../static/libs/sweetalert/dist/sweetalert.css">
+    <link rel="stylesheet" href="../static/libs/sweetalert/dist/sweetalert.css">
     <script src="../static/libs/echarts.js"></script>
     <script src="../static/libs/jquery-3.3.1.min.js"></script>
 
-     <script src="../static/libs/boostrap/bootstrap.min.js"></script>
-  <script src = "../static/libs/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../static/libs/boostrap/bootstrap.min.js"></script>
+    <script src="../static/libs/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.3/dist/loadingoverlay.min.js"></script>
 
-
-    <style type="text/css">
-    .mydiv{
-     margin:0 auto;
-    }
-    p{
-        margin-top: 0px;
-        margin-bottom: 0px;
-    }
-    h1{ text-align:center; }
-    </style>
+    
 </head>
+
 <body>
-<h1>千岛湖各个景区变化及其信息</h1>
-    <form action="/singlejq" method="POST">
-        {% csrf_token %}
-        <p>
-            <input id="name" type="text" name="name"  />
-        </p>
-        <select id="year" name="year">
-                <option value="2018">2018</option>
-                <option value="2017">2017</option>
-                <option value="2016">2016</option>
-        </select>
-        <select id="month" name="month">
-                <option value="01">1</option>
-                <option value="02">2</option>
-                <option value="03">3</option>
-                <option value="04">4</option>
-                <option value="05">5</option>
-                <option value="06">6</option>
-                <option value="07">7</option>
-                <option value="08">8</option>
-                <option value="09">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-        </select>
-        <p><input type="radio" id="time" name="time" value="nian">年</p>
-        <p><input type="radio" id="time" name="time" value="yue">月</p>
-        <p><input type="radio" id="time" name="time" value="zhou">周(最近四周)</p>
-        <p><input type="radio" id="time" name="time" value="tian">天(最近15天)</p>
-        <input id="submit" type="submit" value="提交"/>
-    </form>
-<div class='mydiv' id="meassage">
+    <div class="container">
+        <nav class="navbar navbar-inverse" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">千岛湖评论统计</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/singlejq">单个景区</a>
+                        </li>
+                        <li>
+                            <a href="/alljq">所有景区</a>
+                        </li>
+                        <li>
+                            <a href="indexall">种类景区 </a>
+                        </li>
 
-</div>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="progressBar" class="progressBar" style="display: none; ">数据加载中，请稍等...</div>
+        <h1>千岛湖各个景区变化及其信息</h1>
+        <form role="form" action="/singlejq" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">景区名称：</label>
+                <input type="text" class="form-control" id="name" placeholder="请输入景区名称">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="startYear">请选择起始年份：</label>
+                        <select class="form-control" id="startYear" name="startYear">
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="startMonth">请选择起始月份：</label>
+                        <select class="form-control" id="startMonth" name="startMonth">
+                            <option value="01">1</option>
+                            <option value="02">2</option>
+                            <option value="03">3</option>
+                            <option value="04">4</option>
+                            <option value="05">5</option>
+                            <option value="06">6</option>
+                            <option value="07">7</option>
+                            <option value="08">8</option>
+                            <option value="09">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="endYear">请选择结束年份：</label>
+                        <select class="form-control" id="endYear" name="endYear">
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="endMonth">请选择结束月份：</label>
+                        <select class="form-control" id="endMonth" name="endMonth">
+                            <option value="01">1</option>
+                            <option value="02">2</option>
+                            <option value="03">3</option>
+                            <option value="04">4</option>
+                            <option value="05">5</option>
+                            <option value="06">6</option>
+                            <option value="07">7</option>
+                            <option value="08">8</option>
+                            <option value="09">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="time">请选择间隔：</label>
+                        <select class="form-control" id="time" name="time">
+                            <option value="year">年</option>
+                            <option value="month">月</option>
+                            <option value="season">季度</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-10">
 
-    <div id="main" class='mydiv' style="width: 600px;height:400px;"></div>
-    <div id="main1" class='mydiv' style="width: 600px;height:400px;"></div>
+                            <button style="margin-left: 20px;margin-top: 10px" id="submit" type="submit" class="btn btn-default">提交</button>
+                        </div>
+                    </div>
+        </form>
+        <div class='mydiv' id="meassage">
 
-    <script src = "../static/scripts/SingleJq.js"></script>
+        </div>
+
+        <p id="mainP"></p>
+        <div id="main" class='mydiv' style="width: 600px;height:400px;"></div>
+        <p id="main1P"></p>
+        <div id="main1" class='mydiv' style="width: 600px;height:400px;"></div>
+
+        </div>
+        <script src="../static/scripts/SingleJq.js"></script>
 </body>
+
 </html>

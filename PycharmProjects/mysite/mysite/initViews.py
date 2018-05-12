@@ -197,7 +197,7 @@ class Ways():
         return all
 
     def get_month(self):#评论数量随月的变化
-        flag = 0;
+
         all = {}
         for i in range(len(self.jingqu_name)):
             all[self.jingqu_name[i]] = []
@@ -210,6 +210,9 @@ class Ways():
             all[self.jingqu_name[i]].append(list(b.values))
 
         return all
+     #获取一个月的
+    def get_one_month(self):
+        all = {};
 
     def get_day(self):#评论数量随天的变化
         all = {}
@@ -314,7 +317,7 @@ def get_pingjia(a):
 
 
 def index(request):
-    return render(request, 'singlejq.html', {
+    return render(request, 'index.html', {
     })
 
 def indexall(request):

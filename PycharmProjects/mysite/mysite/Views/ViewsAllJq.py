@@ -11,7 +11,9 @@ def alljq(request):
         month = request.POST.getlist('month')
         name = eval(name[0])
         month = eval(month[0])
+        #将一个数据对象索引成序列 列出数据和数据下标
         for i,j in enumerate(name):
+            print (name);
             haoping = []
             zhongping = []
             chaping = []
