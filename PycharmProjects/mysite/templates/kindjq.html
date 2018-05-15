@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ECharts</title>
+    <title>单个景区</title>
     <!-- 引入 echarts.js -->
     <link href="../static/libs/boostrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../static/libs/boostrap/css/font-awesome.min.css" rel="stylesheet">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../static/libs/sweetalert/dist/sweetalert.css">
     <script src="../static/libs/echarts.js"></script>
     <script src="../static/libs/jquery-3.3.1.min.js"></script>
-    <script src="../static/libs/bootstrap/bootstrap.min.js"></script>
+    <script src="../static/libs/boostrap/bootstrap.min.js"></script>
     <script src="../static/libs/sweetalert/dist/sweetalert.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.3/dist/loadingoverlay.min.js"></script>
@@ -41,23 +41,31 @@
                 <div>
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="/singlejq">单个景区</a>
+                            <a href="/singlejq">景区内部</a>
                         </li>
                         <li>
-                            <a href="/alljq">所有景区</a>
+                            <a href="/alljq">对比分析</a>
                         </li>
                         <li class="active">
-                            <a href="indexall">种类景区 </a>
+                            <a href="/kindjq">同环比分析 </a>
                         </li>
 
                     </ul>
                 </div>
             </div>
         </nav>
-        <h1>{{name}}</h1>
+        <h1 style="text-align: center">景区选择</h1>
 
-        <form role = "form" action="/kindjq" method="POST" >
+
+
+        <form role="form" action="/kindjq" method="POST">
             {% csrf_token %}
+            <div class="form-group">
+                    <label for="name">景区名称</label>
+            <p>
+                <input    class="form-control" id="name" type="text" name="name" placeholder="请输入景区名称" />
+            </p>
+            </div>
             <div class="form-group">
                 <div class="row">
                         <div class="col-xs-6">
@@ -69,37 +77,89 @@
                 <option value="2017">2017</option>
                 <option value="2016">2016</option>
             </select>
-            {% comment %}
-        </div>
-
-            <div class="col-xs-6">
-                <label for = "month">请选择月份：</label>
-            
-                <select class="form-control" id="month" name="month">
-                        <option value="2018">2018</option>
-                        <option value="2017">2017</option>
-                        <option value="2016">2016</option>
-                    </select>
-            </div>
-            </div>
-            <label for = "pingtai">请选择平台：</label>
-            <select class="form-control" id="pingtai" name="pingtai">
-                <option value="携程">携程</option>
-                <option value="大众点评">大众点评</option>
-                <option value="驴妈妈">驴妈妈</option>
-                <option value="飞猪">飞猪</option>
-                <option value="途牛">途牛</option>
-                <option value="马蜂窝">马蜂窝</option>
-                <option value="去哪儿">去哪儿</option>
-                <option value="艺龙">艺龙</option>
-            </select>{% endcomment %}
          
-               
-        </form>
+        </div>
+        <div class="col-xs-6">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="true">
+                请选择月份
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <p>
+                    <input type="checkbox" id="month" name="month" value="01">1</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="02">2</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="03">3</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="04">4</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="05">5</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="06">6</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="07">7</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="08">8</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="09">9</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="10">10</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="11">11</p>
+                <p>
+                    <input type="checkbox" id="month" name="month" value="12">12</p>
+            </ul>
+        </div>
+        </div>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="true">
+                    请选择平台
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <p>
+                        <input type="checkbox" id="pingtai" name="pingtai" value="携程">携程</p>
+                    <p>
+                        <input type="checkbox" id="pingtai" name="pingtai" value="去哪儿">去哪儿</p>
+                    <p>
+                        <input type="checkbox" id="pingtai" name="pingtai" value="驴妈妈">驴妈妈</p>
+                    <p>
+                        <input type="checkbox" id="pingtai" name="pingtai" value="马蜂窝">马蜂窝</p>
+                    <p>
+                        <input type="checkbox" id="pingtai" name="pingtai" value="途牛">途牛</p>
+                    <p>
+                        <input type="checkbox" id="pingtai" name="pingtai" value="大众点评">大众点评</p>
+                    <p>
+                        <input type="checkbox" id="pingtai" name="pingtai" value="飞猪">飞猪</p>
+                    
+                </ul>
+            </div>
+            <div class="row">
+                    <div class="col-xs-10">
+
+                        <button style="margin-left: 20px;margin-top: 10px" id="tijiao" type="submit" class="btn btn-default">提交</button>
+                    </div>
+                </div>
+               </div>
+               </form>
+
+        <div id="main1"  style="width: 700px;height:400px;"></div>
+<div id="main2"  style="width: 700px;height:400px;"></div>
+<div id="main3"  style="width: 700px;height:400px;"></div>
+<div id="main4"  style="width: 700px;height:400px;"></div>
         <div id="result1" class='mydiv' style="width: 600px;height:400px;"></div>
         <div id="result2" class='mydiv' style="width: 600px;height:400px;"></div>
-        </div>
-        <script src="../static/scripts/KindJq.js"></script>
-</body>
 
-</html>
+        </div>
+        <script type="text/javascript">
+             
+             </script>
+             <script src = "../static/scripts/KindJq.js"></script>
+         </body>
+         </html>
+         

@@ -13,6 +13,7 @@ import numpy as np
 from django.http import HttpResponse
 from django.http import JsonResponse
 import datetime
+import math
 import  csv
 
 # client = pymongo.MongoClient('10.66.93.125',27017)
@@ -43,6 +44,7 @@ def rename(name):
         return name
     if len(name)>=5:
         return name[0:5]
+
     else:
         return name
 def convert_time(words):
@@ -66,30 +68,53 @@ def change2(words):
     return words
 def week(words):
     #用秒数来表示时间的浮点数
-    a = time.mktime(time.strptime(words, '%Y-%m-%d'))
+    a = time.mktime(time.strptime(words, '%Y-%m-%d')) #strptime据指定的格式把一个时间字符串解析为时间元组 mktime返回用秒数来表示时间的浮点数。
     timestruct = time.localtime(a)
-    return time.strftime('%W', timestruct)
+    return int(time.strftime('%W', timestruct)) #返回一年中的星期数
+#季度
+def season(month):
+      if (month % 3 == 0):
+          return  int(month / 3);
+      else:
+       return  int(math.floor(month / 3) + 1);
+def changeCommentGrade(grade):
+
+    if pd.isnull(grade) or grade is np.nan:
+
+        return 0;
+    else:
+        return grade;
 def comments_convert(data):
     #字符串进行合并
     data['shop_name'] = data['shop_name'].apply(change1)
-    data['newname'] = data['shop_name'].apply(rename)
+    name = data['shop_name'].value_counts().index
+
+    data['newname'] = data['shop_name'] #去掉rename
     data['comment_time'] = data['comment_time'].apply(convert_time)
     data['year'] = data['comment_time'].apply(lambda x: int(x[0:4]) if x is not np.nan else x)
     data['month'] = data['comment_time'].apply(lambda x: int(x[5:7]) if x is not np.nan else x)
     data['day'] = data['comment_time'].apply(lambda x: x[0:10] if x is not np.nan else x)
+    data['comment_grade'] = data['comment_grade'].apply(changeCommentGrade)
     data['week'] = data['day'].apply(week)
     data['weekday'] = data['day'].apply(lambda x:pd.to_datetime(x).weekday())
     data['pingjia'] = data['comment_grade'].apply(change2)
+
+   # data['yearMonth'] = data.apply(lambda x:'%s.%s' %(data['year'],data['month']),axis = 1);
+    data['yearMonth'] = data['year'].astype(str) + '.' + data['month'].astype(str)
+    data['season'] = data['month'].apply(season);
+    data['yearSeason'] = data['year'].astype(str) + '.' + data['season'].astype(str)
+    data['yearWeek'] = data['year'].astype(str) + '.' + data['week'].astype(str)
+
     return data
 def shops_convert(data):
     data['shop_name'] = data['shop_name'].apply(change1)
-    data['newname'] = data['shop_name'].apply(rename)
+    data['newname'] = data['shop_name']#去掉rename
     name = data['newname'].value_counts().index #记录频数
     all = []
     for i in range(len(name)):
         a = data[data['newname']==name[i]]
-        a = a.fillna(method='bfill')
-        all.append(a.iloc[0])
+        a = a.fillna(method='bfill') #用指定值或插值方法（如ffill和bfill）填充缺失数据
+        all.append(a.iloc[0]) #索引第一行
     data = DataFrame(all)
     return data
 #函数名中含有all的表示的是总体的情况,没有的是单个景区的情况
@@ -98,7 +123,7 @@ class Ways():
         self.comments = data1
         self.shops = data2
         self.jingqu_name = data2['newname'].value_counts().index
-    def get_all_year(self):#每年评论数量的变化
+    def get_all_year(self):#每年评论数量的变化 单个景区的
         a = self.comments['year'].value_counts().sort_index()
         indexlist = list(a.index)
         valuelist = list(a.values)
@@ -296,6 +321,7 @@ class Ways():
 
 comments_data = comments_convert(comments_data)
 shops_data = shops_convert(shops_data)
+#专门指千岛湖的
 jingqu_comments = comments_data[(comments_data['data_source']=='景点')&(comments_data['data_region']=='千岛湖')]
 jingqu_shops = shops_data[(shops_data['data_source']=='景点')&(shops_data['data_region']=='千岛湖')]
 jingqu = Ways(jingqu_comments,jingqu_shops)
@@ -304,6 +330,7 @@ shops_data;
 jingqu_comments;
 jingqu_shops;
 jingqu;
+
 def get_pingtai(pingtai,a,b,num):
     pt_shops = a[a['data_website']==pingtai[num]]
     pt_comments = b[b['data_website']==pingtai[num]]
@@ -316,12 +343,213 @@ def get_pingjia(a):
     return a
 
 
-def index(request):
-    return render(request, 'index.html', {
-    })
+#所有景区根据时间间隔 平台 景点 获取评论数
+def getGradesAllJq(jq,platform,startYear,endYear,startDate,endDate,time):
+    values = [];
+    dates = [];
+    jq_comment_data = comments_data[(comments_data['data_source'] == '景点') & (comments_data['data_region'] == jq)];
+    ends = 0;
+    yearDate = "";
+    if(time == 'season'):
+        ends = 5;
+        yearDate = "yearSeason";
+    elif time == 'month':
+        ends = 13;
+        yearDate = "yearMonth";
+    elif time == 'week':
+        ends = 53;
+        yearDate = "yearWeek";
+    if time == 'year':
 
-def indexall(request):
-    return render(request,'all.html',{})
+        for year in range(int(startYear), int(endYear) + 1):
+            jq_comment_year = jq_comment_data[
+                (jq_comment_data['data_website'] == platform) & (jq_comment_data['year'] == int(year))];
+            if(round(jq_comment_year['comment_grade'].mean() is np.nan)):
+              values.append(0);
+            else:
+              values.append(round(jq_comment_year['comment_grade'].mean(), 1));
+            dates.append(year);
+
+
+#所有景区根据时间间隔 平台 景点 获取评论数
+def getCommentsAllJq(jq,platform,startYear,endYear,startDate,endDate,time):
+    commentsValues = [];
+    gradesValues = [];
+    dates = [];
+
+    ends = 0;
+    yearDate = "";
+    if(time == 'season'):
+        ends = 5;
+        yearDate = "yearSeason";
+    elif time == 'month':
+        ends = 13;
+        yearDate = "yearMonth";
+    elif time == 'week':
+        ends = 53;
+        yearDate = "yearWeek";
+
+    jq_comment_data = comments_data[(comments_data['data_source'] == '景点') & (comments_data['data_region'] == jq)];
+
+    if time == 'year':
+
+
+        for year in range(int(startYear), int(endYear) + 1):
+            jq_comments = jq_comment_data[
+                (jq_comment_data['data_website'] == platform) & (jq_comment_data['year'] == int(year))];
+
+            commentsValues.append(jq_comments.iloc[:, 0].size);
+            if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                gradesValues.append(0);
+            else:
+                gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+            dates.append(year);
+
+    else:
+        if (int(startYear) != int(endYear)):
+            for year in range(int(startYear), int(endYear) + 1):
+                if (int(year) == int(startYear)):
+                    for date in range(int(startDate), ends):
+                        yearDates = str(year) + '.' + str(date)
+
+                        jq_comments = jq_comment_data[
+                            (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
+
+                        commentsValues.append(jq_comments.iloc[:, 0].size);
+                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                            gradesValues.append(0);
+                        else:
+                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                        dates.append(yearDates);
+                elif (int(year) == int(endYear)):
+
+                    for date in range(1, int(endDate) + 1):
+                        yearDates = str(year) + '.' + str(date)
+                        jq_comments = jq_comment_data[
+                            (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
+                        commentsValues.append(jq_comments.iloc[:, 0].size);
+                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                            gradesValues.append(0);
+                        else:
+                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                        dates.append(yearDates);
+                else:
+
+                    for date in range(1, ends):
+                        yearDates = str(year) + '.' + str(date)
+                        jq_comments = jq_comment_data[
+                            (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
+                        commentsValues.append(jq_comments.iloc[:, 0].size);
+                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                            gradesValues.append(0);
+                        else:
+                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                        dates.append(yearDates);
+
+        else:
+            for date in range(int(startDate), int(endDate) + 1):
+                yearDates = str(startYear) + '.' + str(date)
+                jq_comments = jq_comment_data[
+                    (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
+                commentsValues.append(jq_comments.iloc[:, 0].size);
+                if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                    gradesValues.append(0);
+                else:
+                    gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                dates.append(yearDates);
+
+
+
+
+    return dates,commentsValues,gradesValues;
+#千岛湖内部单个景区根据平台 开始 结束 时间间隔的变化
+def getCommentsSingleJq(jq,platform,startYear,endYear,startDate,endDate,time):
+    commentsValues = [];
+    gradesValues = [];
+    dates = [];
+    jq_comment_data = comments_data[(comments_data['data_source'] == '景点') & (comments_data['data_region'] == '千岛湖') & (
+    comments_data['shop_name'] == jq)];
+
+    ends = 0;
+    yearDate = "";
+    if (time == 'season'):
+        ends = 5;
+        yearDate = "yearSeason";
+    elif time == 'month':
+        ends = 13;
+        yearDate = "yearMonth";
+    elif time == 'week':
+        ends = 53;
+        yearDate = "yearWeek";
+
+    if time == 'year':
+
+        for year in range(int(startYear), int(endYear) + 1):
+            jq_comments = jq_comment_data[
+                (jq_comment_data['data_website'] == platform) & (jq_comment_data['year'] == int(year))];
+
+            commentsValues.append(jq_comments.iloc[:, 0].size);
+            if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                gradesValues.append(0);
+            else:
+                gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+            dates.append(year);
+    else:
+        if (int(startYear) != int(endYear)):
+            for year in range(int(startYear), int(endYear) + 1):
+                if (int(year) == int(startYear)):
+                    for date in range(int(startDate), ends):
+                        yearDates = str(year) + '.' + str(date)
+
+                        jq_comments = jq_comment_data[
+                            (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
+
+                        commentsValues.append(jq_comments.iloc[:, 0].size);
+                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                            gradesValues.append(0);
+                        else:
+                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                        dates.append(yearDates);
+                elif (int(year) == int(endYear)):
+
+                    for date in range(1, int(endDate) + 1):
+                        yearDates = str(year) + '.' + str(date)
+                        jq_comments = jq_comment_data[
+                            (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
+                        commentsValues.append(jq_comments.iloc[:, 0].size);
+                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                            gradesValues.append(0);
+                        else:
+                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                        dates.append(yearDates);
+                else:
+
+                    for date in range(1, ends):
+                        yearDates = str(year) + '.' + str(date)
+                        jq_comments = jq_comment_data[
+                            (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
+                        commentsValues.append(jq_comments.iloc[:, 0].size);
+                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                            gradesValues.append(0);
+                        else:
+                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                        dates.append(yearDates);
+
+        else:
+            for date in range(int(startDate), int(endDate) + 1):
+                yearDates = str(startYear) + '.' + str(date)
+                jq_comments = jq_comment_data[
+                    (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
+                commentsValues.append(jq_comments.iloc[:, 0].size);
+                if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                    gradesValues.append(0);
+                else:
+                    gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                dates.append(yearDates);
+    return dates,commentsValues,gradesValues;
+
+def homepage(request):
+    return render(request, 'singlejq.html');
 
 
 

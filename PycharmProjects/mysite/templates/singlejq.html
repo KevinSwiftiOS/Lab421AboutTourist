@@ -2,9 +2,10 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>千岛湖景区</title>
+    <title>景区内部</title>
     <!-- 引入 echarts.js -->
     <link href="../static/libs/boostrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../static/libs/boostrap/css/font-awesome.min.css" rel="stylesheet">
@@ -12,12 +13,10 @@
     <link rel="stylesheet" href="../static/libs/sweetalert/dist/sweetalert.css">
     <script src="../static/libs/echarts.js"></script>
     <script src="../static/libs/jquery-3.3.1.min.js"></script>
-
     <script src="../static/libs/boostrap/bootstrap.min.js"></script>
     <script src="../static/libs/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.3/dist/loadingoverlay.min.js"></script>
 
-    
 </head>
 
 <body>
@@ -30,26 +29,40 @@
                 <div>
                     <ul class="nav navbar-nav">
                         <li class="active">
-                            <a href="/singlejq">单个景区</a>
+                            <a href="/singlejq">景区内部</a>
                         </li>
                         <li>
-                            <a href="/alljq">所有景区</a>
+                            <a href="/alljq">对比分析</a>
                         </li>
                         <li>
-                            <a href="indexall">种类景区 </a>
+                            <a href="/kindjq">同环比分析 </a>
                         </li>
 
                     </ul>
                 </div>
             </div>
         </nav>
-        <div id="progressBar" class="progressBar" style="display: none; ">数据加载中，请稍等...</div>
-        <h1>千岛湖各个景区变化及其信息</h1>
+
         <form role="form" action="/singlejq" method="POST">
             {% csrf_token %}
             <div class="form-group">
-                <label for="name">景区名称：</label>
-                <input type="text" class="form-control" id="name" placeholder="请输入景区名称">
+                <div class="row">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="jqMenu" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="true">
+                        请选择内部景区
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="jqMenu">
+                        <p><input type="checkbox" id="jq" name="jq" value="千岛湖钓鱼岛">千岛湖钓鱼岛</p>
+                        <p><input type="checkbox" id="jq" name="jq" value="千岛湖中心湖">千岛湖中心湖</p>
+                        <p><input type="checkbox" id="jq" name="jq" value="千岛湖海洋馆">千岛湖海洋馆</p>
+                        <p><input type="checkbox" id="jq" name="jq" value="千岛湖森林氧吧">千岛湖森林氧吧</p>
+                        <p><input type="checkbox" id="jq" name="jq" value="白云溪漂流">白云溪漂流</p>
+                    </ul>
+                </div>
+                </div>
+                </div>
                 <div class="row">
                     <div class="col-xs-6">
                         <label for="startYear">请选择起始年份：</label>
@@ -111,8 +124,34 @@
                             <option value="year">年</option>
                             <option value="month">月</option>
                             <option value="season">季度</option>
+                            <option value="week">周</option>
                         </select>
                     </div>
+                  <div class="col-xs-6">
+                        <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="platformMenu" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="true">
+                                    请选择平台
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="platformMenu">
+                                    <p> <input type="checkbox" id="platform" name="platform" value="所有">所有</p>
+                                    <p> <input type="checkbox" id="platform" name="platform" value="携程">携程</p>
+                                    <p> <input type="checkbox" id="platform" name="platform" value="去哪儿">去哪儿</p>
+                                    <p> <input type="checkbox" id="platform" name="platform" value="驴妈妈">驴妈妈</p>
+                                    <p> <input type="checkbox" id="platform" name="platform" value="马蜂窝">马蜂窝</p>
+                                    <p> <input type="checkbox" id="platform" name="platform" value="途牛">途牛</p>
+                                    <p> <input type="checkbox" id="platform" name="platform" value="大众点评">大众点评</p>
+                                    <p> <input type="checkbox" id="platform" name="platform" value="飞猪">飞猪</p>
+                                    <p> <input type="checkbox" id="platform" name="platform" value="艺龙">艺龙</p>
+                                </ul>
+                            </div>
+
+
+
+                  </div>
+</div>
+
                     <div class="row">
                         <div class="col-xs-10">
 
@@ -120,17 +159,13 @@
                         </div>
                     </div>
         </form>
-        <div class='mydiv' id="meassage">
 
-        </div>
+     <div id = "echart">
+         
+     </div>
 
-        <p id="mainP"></p>
-        <div id="main" class='mydiv' style="width: 600px;height:400px;"></div>
-        <p id="main1P"></p>
-        <div id="main1" class='mydiv' style="width: 600px;height:400px;"></div>
-
-        </div>
-        <script src="../static/scripts/SingleJq.js"></script>
+    </div>
+    <script src="../static/scripts/SingleJq.js"></script>
 </body>
 
 </html>
