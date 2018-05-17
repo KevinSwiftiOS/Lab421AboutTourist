@@ -35,13 +35,13 @@ def alljq(request):
                 for j, jq in enumerate(jqs):
                     comments['dates'], commentsValue,gradeValue = getCommentsAllJq(jq, platform, startYear, endYear, startDate, endDate, time);
 
-                    jq = {
+                    value = {
                         "name": jq,
                         "commentValue": commentsValue,
                          "gradeValue":gradeValue
                     }
-                    platforms["jqs"].append(jq);
-                    comments["platforms"].append(platforms);
+                    platforms["jqs"].append(value);
+                comments["platforms"].append(platforms);
 
             res["data"] = comments;
             res["code"] = 0;

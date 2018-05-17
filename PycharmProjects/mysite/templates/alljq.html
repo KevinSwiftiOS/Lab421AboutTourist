@@ -5,10 +5,11 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>所有景区</title>
+    <title>环比分析</title>
     <!-- 引入 echarts.js -->
     <link href="../static/libs/boostrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../static/libs/boostrap/css/font-awesome.min.css" rel="stylesheet">
+    <link href = "../static/libs/UI/assets/css/custom-styles.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../static/libs/sweetalert/dist/sweetalert.css">
     <script src="../static/libs/echarts.js"></script>
@@ -16,152 +17,231 @@
     <script src="../static/libs/boostrap/bootstrap.min.js"></script>
     <script src="../static/libs/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.3/dist/loadingoverlay.min.js"></script>
-
+ <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 
 <body>
-    <div class="container">
-        <nav class="navbar navbar-inverse" role="navigation">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">千岛湖评论统计</a>
-                </div>
-                <div>
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="/singlejq">景区内部</a>
-                        </li>
-                        <li class="active">
-                            <a href="/alljq">对比分析</a>
-                        </li>
-                        <li>
-                            <a href="/kindjq">同环比分析 </a>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <form role="form" action="/alljq" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <div class="row">
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="jqMenu" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="true">
-                        请选择需对比景区
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="jqMenu">
-                        <p><input type="checkbox" id="jq" name="jq" value="西湖">西湖</p>
-                        <p><input type="checkbox" id="jq" name="jq" value="溪口">溪口</p>
-                    </ul>
-                </div>
-                </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <label for="startYear">请选择起始年份：</label>
-                        <select class="form-control" id="startYear" name="startYear">
-                            <option value="2018">2018</option>
-                            <option value="2017">2017</option>
-                            <option value="2016">2016</option>
-                        </select>
-                    </div>
-                    <div class="col-xs-6">
-                        <label for="startMonth">请选择起始月份：</label>
-                        <select class="form-control" id="startMonth" name="startMonth">
-                            <option value="01">1</option>
-                            <option value="02">2</option>
-                            <option value="03">3</option>
-                            <option value="04">4</option>
-                            <option value="05">5</option>
-                            <option value="06">6</option>
-                            <option value="07">7</option>
-                            <option value="08">8</option>
-                            <option value="09">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <label for="endYear">请选择结束年份：</label>
-                        <select class="form-control" id="endYear" name="endYear">
-                            <option value="2018">2018</option>
-                            <option value="2017">2017</option>
-                            <option value="2016">2016</option>
-                        </select>
-                    </div>
-                    <div class="col-xs-6">
-                        <label for="endMonth">请选择结束月份：</label>
-                        <select class="form-control" id="endMonth" name="endMonth">
-                            <option value="01">1</option>
-                            <option value="02">2</option>
-                            <option value="03">3</option>
-                            <option value="04">4</option>
-                            <option value="05">5</option>
-                            <option value="06">6</option>
-                            <option value="07">7</option>
-                            <option value="08">8</option>
-                            <option value="09">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <label for="time">请选择间隔：</label>
-                        <select class="form-control" id="time" name="time">
-                            <option value="year">年</option>
-                            <option value="month">月</option>
-                            <option value="season">季度</option>
-                            <option value="week">周</option>
-                        </select>
-                    </div>
-                  <div class="col-xs-6">
-                        <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="platformMenu" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="true">
-                                    请选择平台
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="platformMenu">
-                                    <p> <input type="checkbox" id="platform" name="platform" value="所有">所有</p>
-                                    <p> <input type="checkbox" id="platform" name="platform" value="携程">携程</p>
-                                    <p> <input type="checkbox" id="platform" name="platform" value="去哪儿">去哪儿</p>
-                                    <p> <input type="checkbox" id="platform" name="platform" value="驴妈妈">驴妈妈</p>
-                                    <p> <input type="checkbox" id="platform" name="platform" value="马蜂窝">马蜂窝</p>
-                                    <p> <input type="checkbox" id="platform" name="platform" value="途牛">途牛</p>
-                                    <p> <input type="checkbox" id="platform" name="platform" value="大众点评">大众点评</p>
-                                    <p> <input type="checkbox" id="platform" name="platform" value="飞猪">飞猪</p>
-                                    <p> <input type="checkbox" id="platform" name="platform" value="艺龙">艺龙</p>
-                                </ul>
-                            </div>
+        <div id="wrapper">
 
 
 
-                  </div>
-</div>
-
-                    <div class="row">
-                        <div class="col-xs-10">
-
-                            <button style="margin-left: 20px;margin-top: 10px" id="submit" type="submit" class="btn btn-default">提交</button>
+                <nav class="navbar navbar-default top-navbar" role="navigation">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#" style="width: 500px;">千岛湖旅游评论分析</a>
                         </div>
-                    </div>
-        </form>
+            
+                        <ul class="nav navbar-top-links navbar-right">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                </a>
+                             
+                                <!-- /.dropdown-messages -->
+                            </li>
+                            <!-- /.dropdown -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                </a>
+                              
+                                <!-- /.dropdown-tasks -->
+                            </li>
+                            <!-- /.dropdown -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                </a>
+                                
+                                <!-- /.dropdown-alerts -->
+                            </li>
+                            <!-- /.dropdown -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                                    </li>
+                                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                                    </li>
+                                </ul>
+                                <!-- /.dropdown-user -->
+                            </li>
+                            <!-- /.dropdown -->
+                        </ul>
+                    </nav>
+                    <!--/. NAV TOP  -->
+                    <nav class="navbar-default navbar-side" role="navigation">
+                        <div class="sidebar-collapse">
+                            <ul class="nav" id="main-menu">
+            
+                                <li>
+                                    <a href="/singlejq"><i class="fa fa-bar-chart-o"></i> 内部景区</a>
+                                </li>
+                                <li>
+                                    <a href="/alljq" class="active-menu"><i class="fa fa-bar-chart-o"></i>环比分析</a>
+                                </li>
+                                <li>
+                                    <a href="/kindjq"><i class="fa fa-bar-chart-o"></i> 同比分析</a>
+                                </li>
+                                
+                                
+                            
+            
+            
+                             
+                            </ul>
+            
+                        </div>
+            
+                    </nav>
+                    <div id="page-wrapper" >
+                            <div id="page-inner">
+                                    <div class="row">
+                                            <div class="col-md-12">
+                                                <h1 class="page-header">
+                                                    千岛湖 <small>与其余景区评论分析</small>
+                                                </h1>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">
+                                                        
+                                                        </div>
+                                                        <div class="panel-body">
+                                                                <form role="form" action="/alljq" method="POST">
+                                                            <div class="row">
+                                                        <div class="col-lg-12">
+                                                              
+                                                                    {% csrf_token %}
+                                                                   
+                                                                        <div class="row">
+                                                                            <div class="col-xs-3">
+                                                                
+                                                                        <div class="form-group">
+                                                                                <label>请选择对比景区：</label>
+                                                                                <select  id = "jq" multiple="multiple" class="form-control">
+                                                                                    <option  value="西湖">西湖</option>
+                                                                                    <option   value="溪口">溪口</option>
+                                                                             
+                                                                              
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xs-3">
+                                                                                <div class="form-group">
+                                                                                    <label for="time">请选择时间间隔</label>
+                                                                                    <select class="form-control" id="time" name="time">
+                                                                                            <option value="year">年</option>
+                                                                                            <option value="season">季度</option>
+                                                                                            <option value="month">月</option>
+                                                                                            <option value="week">周</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                        </div>
+                                                                        <div class="col-xs-3">
+                                                                  
+                                                                                    <div class="form-group">
+                                                                                            <label>请选择平台来源：</label>
+                                                                                            <select id="platform" multiple="multiple" class="form-control">
+                                                                                                <option  value="所有">所有</option>
+                                                                                                <option    value="携程">携程</option>
+                                                                                                <option  value="去哪儿">去哪儿</option>
+                                                                                                <option  value="马蜂窝">马蜂窝</option>
+                                                                                                <option   value="途牛">途牛</option>
+                                                                                                <option  value="大众点评">大众点评</option>
+                                                                                                <option  value="飞猪">飞猪</option>
+                                                                                                <option value="艺龙">艺龙</option>
+                                                                                                <option value="驴妈妈">驴妈妈</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                        </div>
+                                                                        </div>
+                                                                        </div>
+                                                                        <div class="col-lg-12">
+                                                                        <div class="row">
+                                                                            <div class="col-xs-6">
+                                                                                <label for="startYear">请选择起始年份：</label>
+                                                                                <select class="form-control" id="startYear" name="startYear">
+                                                                                    <option value="2018">2018</option>
+                                                                                    <option value="2017">2017</option>
+                                                                                    <option value="2016">2016</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-xs-6">
+                                                                                <div id = "startDateDiv">
+                                                                             
+                                                                            </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>
+                                                                        <div class="col-lg-12">
+                                                                        <div class="row">
+                                                                            <div class="col-xs-6">
+                                                                                <label for="endYear" >请选择结束年份：</label>
+                                                                                <select class="form-control" id="endYear" name="endYear">
+                                                                                    <option value="2018">2018</option>
+                                                                                    <option value="2017">2017</option>
+                                                                                    <option value="2016">2016</option>
+                                                                                </select>
+                                                                            </div>
 
-     <div id = "echart">
-         
-     </div>
+                                                                            <div class="col-xs-6">
+                                                                                    <div id = "endDateDiv">
+                                                                             
+                                                                                        </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>
 
-    </div>
+                                                                     <div class="col-lg-12">
+                                                        
+                                                                            <div class="row">
+                                                                                <div class="col-lg-12" style="text-align: center">
+                                                        
+                                                                                    <button style="margin-top: 10px;width: 100px;" id="submit" type="submit" class="btn btn-default">提交</button>
+                                                                                </div>
+                                                                            </div>
+                                                                       
+                                                                        </div>
+                                                                </div>
+                                                                </form>
+                                                                <div  id = "resultDiv">
+                                                                   
+                                                                </div>
+                                                               
+                                                                            </div>
+                                                                            </div>
+                                                                            </div>
+                                                             </div>
+                                                        
+                                                           
+                                                        
+                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                          
+                                   
+
+
+
+
+
+
+
+   
     <script src="../static/scripts/AllJq.js"></script>
 </body>
 

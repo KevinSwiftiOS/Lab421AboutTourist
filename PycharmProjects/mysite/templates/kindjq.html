@@ -3,163 +3,229 @@
 
 <head>
     <meta charset="utf-8">
-    <title>单个景区</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>同比分析</title>
     <!-- 引入 echarts.js -->
     <link href="../static/libs/boostrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../static/libs/boostrap/css/font-awesome.min.css" rel="stylesheet">
+    <link href = "../static/libs/UI/assets/css/custom-styles.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../static/libs/sweetalert/dist/sweetalert.css">
     <script src="../static/libs/echarts.js"></script>
     <script src="../static/libs/jquery-3.3.1.min.js"></script>
     <script src="../static/libs/boostrap/bootstrap.min.js"></script>
     <script src="../static/libs/sweetalert/dist/sweetalert.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.3/dist/loadingoverlay.min.js"></script>
-    <style type="text/css">
-        .mydiv {
-            margin: 0 auto;
-        }
-
-        p {
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-    </style>
+ <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 
 <body>
-    <div class="container">
-        <nav class="navbar navbar-inverse" role="navigation">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">千岛湖评论统计</a>
-                </div>
-                <div>
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="/singlejq">景区内部</a>
-                        </li>
-                        <li>
-                            <a href="/alljq">对比分析</a>
-                        </li>
-                        <li class="active">
-                            <a href="/kindjq">同环比分析 </a>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <h1 style="text-align: center">景区选择</h1>
+        <div id="wrapper">
 
 
 
-        <form role="form" action="/kindjq" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                    <label for="name">景区名称</label>
-            <p>
-                <input    class="form-control" id="name" type="text" name="name" placeholder="请输入景区名称" />
-            </p>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                        <div class="col-xs-6">
-                
-                <label for = "year">请选择年份：</label>
+                <nav class="navbar navbar-default top-navbar" role="navigation">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#" style="width: 500px;">千岛湖旅游评论分析</a>
+                        </div>
             
-            <select class="form-control" id="year" name="year">
-                <option value="2018">2018</option>
-                <option value="2017">2017</option>
-                <option value="2016">2016</option>
-            </select>
-         
-        </div>
-        <div class="col-xs-6">
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="true">
-                请选择月份
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <p>
-                    <input type="checkbox" id="month" name="month" value="01">1</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="02">2</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="03">3</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="04">4</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="05">5</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="06">6</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="07">7</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="08">8</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="09">9</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="10">10</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="11">11</p>
-                <p>
-                    <input type="checkbox" id="month" name="month" value="12">12</p>
-            </ul>
-        </div>
-        </div>
-            </div>
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="true">
-                    请选择平台
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <p>
-                        <input type="checkbox" id="pingtai" name="pingtai" value="携程">携程</p>
-                    <p>
-                        <input type="checkbox" id="pingtai" name="pingtai" value="去哪儿">去哪儿</p>
-                    <p>
-                        <input type="checkbox" id="pingtai" name="pingtai" value="驴妈妈">驴妈妈</p>
-                    <p>
-                        <input type="checkbox" id="pingtai" name="pingtai" value="马蜂窝">马蜂窝</p>
-                    <p>
-                        <input type="checkbox" id="pingtai" name="pingtai" value="途牛">途牛</p>
-                    <p>
-                        <input type="checkbox" id="pingtai" name="pingtai" value="大众点评">大众点评</p>
-                    <p>
-                        <input type="checkbox" id="pingtai" name="pingtai" value="飞猪">飞猪</p>
-                    
-                </ul>
-            </div>
-            <div class="row">
-                    <div class="col-xs-10">
+                        <ul class="nav navbar-top-links navbar-right">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                </a>
+                             
+                                <!-- /.dropdown-messages -->
+                            </li>
+                            <!-- /.dropdown -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                </a>
+                              
+                                <!-- /.dropdown-tasks -->
+                            </li>
+                            <!-- /.dropdown -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                </a>
+                                
+                                <!-- /.dropdown-alerts -->
+                            </li>
+                            <!-- /.dropdown -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                                    </li>
+                                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                                    </li>
+                                </ul>
+                                <!-- /.dropdown-user -->
+                            </li>
+                            <!-- /.dropdown -->
+                        </ul>
+                    </nav>
+                    <!--/. NAV TOP  -->
+                    <nav class="navbar-default navbar-side" role="navigation">
+                        <div class="sidebar-collapse">
+                            <ul class="nav" id="main-menu">
+            
+                                <li>
+                                    <a href="/singlejq"><i class="fa fa-bar-chart-o"></i> 内部景区</a>
+                                </li>
+                                <li>
+                                    <a href="/alljq"><i class="fa fa-bar-chart-o"></i>环比分析</a>
+                                </li>
+                                <li>
+                                    <a href="/kindjq" class="active-menu"><i class="fa fa-bar-chart-o"></i> 同比分析</a>
+                                </li>
+                                
+                                
+                            
+            
+            
+                             
+                            </ul>
+            
+                        </div>
+            
+                    </nav>
+                    <div id="page-wrapper" >
+                        <div id="page-inner">
+                                <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 class="page-header">
+                                                千岛湖 <small>与往期评论分析</small>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                    
+                                                    </div>
+                                                    <div class="panel-body">
+                                                            <form role="form" action="/kindjq" method="POST">
+                                                        <div class="row">
+                                                    <div class="col-lg-12">
+                                                          
+                                                                {% csrf_token %}
+                                                               
+                                                                    <div class="row">
+                                                                        <div class="col-xs-3">
+                                                            
+                                                                    <div class="form-group">
+                                                                            <label>请选择比较年份：</label>
+                                                                            <select  id = "year" multiple="multiple" class="form-control">
+                                                                                <option  value="2018">2018</option>
+                                                                                <option   value="2017">2017</option>
+                                                                                <option  value="2016">2016</option>
+                                                                                <option  value="2015">2015</option>
+                                                                                <option   value="2014">2014</option>
+                                                                          
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-3">
+                                                                            <div class="form-group">
+                                                                                <label for="time">请选择时间间隔</label>
+                                                                                <select class="form-control" id="time" name="time">
+                                                                                        <option value="year">年</option>
+                                                                                        <option value="season">季度</option>
+                                                                                        <option value="month">月</option>
+                                                                                        <option value="week">周</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                    </div>
+                                                                    <div class="col-xs-3">
+                                                              
+                                                                                <div class="form-group">
+                                                                                        <label>请选择平台来源：</label>
+                                                                                        <select id="platform" multiple="multiple" class="form-control">
+                                                                                            <option  value="所有">所有</option>
+                                                                                            <option    value="携程">携程</option>
+                                                                                            <option  value="去哪儿">去哪儿</option>
+                                                                                            <option  value="马蜂窝">马蜂窝</option>
+                                                                                            <option   value="途牛">途牛</option>
+                                                                                            <option  value="大众点评">大众点评</option>
+                                                                                            <option  value="飞猪">飞猪</option>
+                                                                                            <option value="艺龙">艺龙</option>
+                                                                                            <option value="驴妈妈">驴妈妈</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                    </div>
+                                                                    </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                    <div class="row">
+                                                                 
+                                                                        <div class="col-xs-6">
+                                                                            <div id = "startDateDiv">
+                                                                         
+                                                                        </div>
+                                                                        </div>
+                                                                        <div class="col-xs-6">
+                                                                            <div id = "endDateDiv">
+                                                                     
+                                                                                </div>
+                                                                    </div>
+                                                                    </div>
+                                                             
+                                                                
 
-                        <button style="margin-left: 20px;margin-top: 10px" id="tijiao" type="submit" class="btn btn-default">提交</button>
-                    </div>
-                </div>
-               </div>
-               </form>
+                                                                      
+                                                                        </div>
+                                                                  
 
-        <div id="main1"  style="width: 700px;height:400px;"></div>
-<div id="main2"  style="width: 700px;height:400px;"></div>
-<div id="main3"  style="width: 700px;height:400px;"></div>
-<div id="main4"  style="width: 700px;height:400px;"></div>
-        <div id="result1" class='mydiv' style="width: 600px;height:400px;"></div>
-        <div id="result2" class='mydiv' style="width: 600px;height:400px;"></div>
+                                                                 <div class="col-lg-12">
+                                                    
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12" style="text-align: center">
+                                                    
+                                                                                <button style="margin-top: 10px;width: 100px;" id="submit" type="submit" class="btn btn-default">提交</button>
+                                                                            </div>
+                                                                        </div>
+                                                                   
+                                                                    </div>
+                                                            </div>
+                                                            </form>
+                                                            <div  id = "resultDiv">
+                                                               
+                                                            </div>
+                                                           
+                                                                        </div>
+                                                                        </div>
+                                                                        </div>
+                                                         </div>
+                                                    
+                                                       
+                                                    
+                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                      
 
-        </div>
-        <script type="text/javascript">
-             
-             </script>
-             <script src = "../static/scripts/KindJq.js"></script>
-         </body>
-         </html>
-         
+
+
+
+   
+    <script src="../static/scripts/KindJq.js"></script>
+</body>
+
+</html>

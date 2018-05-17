@@ -210,7 +210,8 @@ def singlejq(request):
         endYear = request.POST.get('endYear')
         endDate = request.POST.get('endDate')
         time = request.POST.get('time')
-
+        print (jqs);
+        print (platforms);
         # name = eval(name[0])
         # month = eval(month[0])
         data = {
@@ -229,12 +230,12 @@ def singlejq(request):
                 for j, platform in enumerate(platforms):
                     data['dates'], commentValue,gradeValue = getCommentsSingleJq(jq, platform, startYear, endYear, startDate, endDate, time);
 
-                    platform = {
+                    value = {
                         "name": platform,
                         "commentValue": commentValue,
                         "gradeValue":gradeValue
                     }
-                    jqs["platforms"].append(platform);
+                    jqs["platforms"].append(value);
                 data["jqs"].append(jqs);
 
             res["data"] = data;

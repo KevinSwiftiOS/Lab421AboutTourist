@@ -13,6 +13,64 @@ var gradesItem = function () {
         data: []
     }
 };
+var options = [];
+//根据时间间隔动态选择option的值
+$("#time").change(function(){
+    var  time = $("#time").val();
+    $("#startDate").empty();
+    $("#endDate").empty();
+    $("#startDateDiv").empty();
+    $("#endDateDiv").empty();
+   switch (time){
+     
+       case "season":
+       $("#startDateDiv").append('<label for="startDate" id = "startDateText">请选择开始季度：</label>' + 
+       '<select class="form-control" id="startDate" name="startDate">'
+    
+        + '</select>');
+        $("#endDateDiv").append('<label for="endDate" id = "endDateText">请选择结束季度：</label>' + 
+        '<select class="form-control" id="endDate" name="endDate">'
+     
+         + '</select>');
+       for(var i = 1; i <= 4;i++) {
+      $("#startDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       $("#endDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       }
+       break;
+       case "month":
+     $("#startDateDiv").append('<label for="startDate" id = "startDateText">请选择开始月份：</label>' + 
+        '<select class="form-control" id="startDate" name="startDate">'
+     
+         + '</select>');
+         $("#endDateDiv").append('<label for="endDate" id = "endDateText">请选择结束月份：</label>' + 
+         '<select class="form-control" id="endDate" name="endDate">'
+      
+          + '</select>');  
+       for(var i = 1; i <= 12;i++) {
+       $("#startDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       $("#endDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       }
+       break;
+       case "week":
+       $("#startDateDiv").append('<label for="startDate" id = "startDateText">请选择开始周：</label>' + 
+       '<select class="form-control" id="startDate" name="startDate">'
+    
+        + '</select>');
+        $("#endDateDiv").append('<label for="endDate" id = "endDateText">请选择结束周：</label>' + 
+        '<select class="form-control" id="endDate" name="endDate">'
+     
+         + '</select>');
+       for(var i = 1; i <= 52;i++) {
+       $("#startDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       $("#endDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       }
+       break;
+       default:
+       break;
+
+   }
+})
+
 $("#submit").click(function () {
      
  
@@ -20,30 +78,35 @@ $("#submit").click(function () {
     var  platforms = [];
     //开始与结束月份获取
     var startYear = $("#startYear").val();   
-    var startDate = $("#startMonth").val();   
+    var startDate = $("#startDate").val();   
     var endYear = $("#endYear").val();   
-    var endDate = $("#endMonth").val();   
+    var endDate = $("#endDate").val();   
     var  time = $("#time").val();
     //景区获取
-
-   
-   
-     jgObj = document.getElementsByName("jq");
-    for (i in jgObj) {
-        if (jgObj[i].checked)
-        jqs.push(jgObj[i].value);
-    }
-    //千岛湖是默认的
-    jqs.push('千岛湖');
-    platformObj = document.getElementsByName("platform");
-    for (i in platformObj) {
-        if (platformObj[i].checked)
-            platforms.push(platformObj[i].value);
-    }
-
+    
+    jqs = $("#jq").val();
+    jqs.push("千岛湖");
+ //千岛湖要push
+ 
+ platforms = $("#platform").val();
+   //查看是否有所有标签被选上
+   for(var i = 0; i < platforms.length;i++){
+       if(platforms[i] == '所有'){
+           platforms = [];
+           platforms = ['携程','艺龙','去哪儿','驴妈妈','马蜂窝','途牛','飞猪','大众点评'];
+              break;
+       }
+   }
+  
     var errMes = "";
+    if(jqs.length == 0)
+    errMes += "未选择景区，"
     if(platforms.length == 0)
-      errMes += "未选择平台";
+      errMes += "未选择平台，";
+      if(startYear > endYear)
+      errMes += "开始时间不能大于结束时间";
+      if(startYear == endYear && startDate > endDate)
+      errMes += "开始时间不能大于结束时间"
     if(errMes != "")
     swal("提醒",errMes,"warning");  
     
@@ -58,6 +121,7 @@ $("#submit").click(function () {
         'platforms':JSON.stringify(platforms),
         'time':time
     };
+ 
     console.log(param);
     $.ajax({
         headers: { "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').val() },
@@ -65,11 +129,24 @@ $("#submit").click(function () {
         type: "POST",
         data: param,
         success: function (res) {
-            $("#echart").empty();
+            $("#resultDiv").empty();
+            options = [];
             $.LoadingOverlay("hide");
             if(res.code == 0){
             var data = res.data;
             console.log(data);
+        
+       
+            $("#resultDiv").append('<div class = "row"><div class = "col-xs-3"><label for="resultSelect">请选择平台：</label>' + 
+            '<select class="form-control" id="resultSelect" name="resultSelect">'
+
+         
+             + '</select></div></div>');
+             var commentDiv =  
+             '<div id=' + "'" + "comments" + "'" + ' style="width:45%;height:400px;float:left"/>';
+             var gradeDiv = '<div id=' + "'" + "grades" + "'" + ' style="width:45%;float:left;height:400px;"/>'
+             $("#resultDiv").append(commentDiv);
+             $("#resultDiv").append(gradeDiv);
             for(var i = 0; i < data.platforms.length;i++){
 
             var commentOption = {
@@ -146,94 +223,44 @@ $("#submit").click(function () {
                         gradeOption.series.push(gradeItem);
                     
                 }
-                var commentDiv = '<div id=' + "'" + data.platforms[i].platform + "评论" +  "'" + ' style="width: 500px;height:400px;float:left"></div>'
-                var gradeDiv = '<div id=' + "'" + data.platforms[i].platform + "评分" + "'" + ' style="width: 500px;height:400px;float:left"></div>'
-             
-                $("#echart").append(commentDiv);
-                $("#echart").append(gradeDiv);
-                var commentChart = echarts.init(document.getElementById( data.platforms[i].platform + "评论"));
-                commentChart.setOption(commentOption, true);
-                var gradeChart = echarts.init(document.getElementById(data.platforms[i].platform + "评分"));
-                gradeChart.setOption(gradeOption, true);
-  
+                var option = {
+                    "platformName": data.platforms[i].platform,
+                    options:[commentOption,gradeOption]
+                };
+                options.push(option);
+                console.log(111);
+                console.log(data.platforms[0].platform);
+                $("#resultSelect").append("<option value=" + "'" +data.platforms[i].platform + "'" + ">" + data.platforms[i].platform  + "</option>"); 
+              
+              }
+              console.log(222);
+              console.log(options[0].platformName);
+               var commentChart = echarts.init(document.getElementById("comments"));
+                   commentChart.setOption(options[0].options[0], true);
+                   var gradeChart = echarts.init(document.getElementById("grades"));
+                   gradeChart.setOption(options[0].options[1], true);
+//查看平台选择变化
+$("#resultSelect").change(function(){
+   
+    console.log(999999);
+    var i = 0;
+    for(;i < options.length;i++)
+    if(options[i].platformName ==  $("#resultSelect").val())
+    break;
+    var commentChart = echarts.init(document.getElementById("comments"));
+    commentChart.setOption(options[i].options[0], true);
+    var gradeChart = echarts.init(document.getElementById("grades"));
+    gradeChart.setOption(options[i].options[1], true);
+})
+
+
+
             }
-            }
 
 
 
 
-        //    if(data.code == 0) {
-        //     var jqText = "";
-        //     for(var i = 0; i < jq.length;i++)
-        //     jqText += jq[i] + ",";
-       
-        //    var monthText = year + "年";
-        //    for(var i = 0; i < month.length;i++)
-        //    monthText += month[i] + ",";
-        //    monthText += "月";
-        //    if(jq.length > 1) {
-        //    $("#commentsP").text(jqText + year + "年的评论数量比较");
-        //    $("#gGradesP").text(jqText + monthText + "年的好评等级数量比较");
-        //    $("#mGradesP").text(jqText + monthText + "年的中评等级数量比较");
-        //    $("#bGradesP").text(jqText + monthText + "年的差评等级数量比较");
-
-        //    }
-        //    else{
-        //    $("#commentsP").text(jqText + year + "年的评论数量变化");
-        //    $("#gGradesP").text(jqText + monthText + "年的好评等级数量变化");
-        //    $("#mGradesP").text(jqText + monthText + "年的中评等级数量比较");
-        //    $("#bGradesP").text(jqText + monthText + "年的差评等级数量比较");
-
-
-        //    }
-          
-        //     console.log(data);
-        //     var commentsChart = echarts.init(document.getElementById('commentsDiv'));
-        //     var gGradesChart = echarts.init(document.getElementById('gGradesDiv'));
-        //     var mGradesChart = echarts.init(document.getElementById('mGradesDiv'));
-        //     var bGradesChart = echarts.init(document.getElementById('bGradesDiv'));
-        //     var commentsSeries = [];
-        //     for (var i = 0; i < jq.length; i++) {
-        //         var it = new Item();
-        //         it.name = jq[i];
-        //         it.data = data[jq[i]]['month_number'];
-        //         commentsSeries.push(it);
-        //     }
-        //     var commentsOptions = {
-        //         tooltip: {
-        //             trigger: 'axis'
-        //         },
-        //         legend: {
-        //             data: jq
-        //         },
-        //         xAxis: {
-        //             type: 'category',
-        //             boundaryGap: false,
-        //             data: data[jq[0]]['month']
-        //         },
-        //         yAxis: {
-        //             type: 'value',
-        //             axisLabel: {
-        //                 formatter: '{value}'
-        //             }
-        //         },
-        //         series: []
-        //     };
-        //     console.log(commentsSeries);
-        //     commentsOptions.series = commentsSeries;
-            
-        //     commentsChart.setOption(commentsOptions, true);
-        //    //好评数的变化
-        //     var gGradesOptions = initOptions('haoping',data);
-        //     gGradesChart.setOption(gGradesOptions,true);
-
-        //     var mGradesOptions = initOptions('zhongping',data);
-        //     mGradesChart.setOption(mGradesOptions,true);
-        //     var bGradesOptions = initOptions('chaping',data);
-        //     bGradesChart.setOption(bGradesOptions,true);
-        // }else{
-        //     swal("提醒",data.message,"error");
-        // }
+      
 
 
 
@@ -261,35 +288,3 @@ $("#submit").click(function () {
 
 }
 );
-//初始化option
-function initOptions(grades,data) {
-var Series = [];
-for(var i = 0; i < jq.length;i++){
-    var it = new gradesItem();
-    it.name = jq[i];
-    it.data = data[jq[i]][grades];
-    Series.push(it);
-}
-var options = {
- tooltip: {
-     trigger: 'axis'
- },
- legend: {
-     data: jq
- },
- xAxis: {
-     type: 'category',
- 
-     data: data[jq[0]]['gradeMonths']
- },
- yAxis: {
-     type: 'value',
-     axisLabel: {
-         formatter: '{value}'
-     }
- },
- series: []
-};
-options.series = Series;
- return options;
-}

@@ -1,36 +1,111 @@
-$("#tijiao").click(function () {
+var Item = function () {
+    return {
+        name: '',
+        type: 'line',
+        data: []
+    }
+};
+var gradesItem = function () {
+    return {
+        name: '',
+        type: 'bar',
+        data: []
+    }
+};
+var options = [];
+//根据时间间隔动态选择option的值
+$("#time").change(function(){
+    var  time = $("#time").val();
+    $("#startDate").empty();
+    $("#endDate").empty();
+    $("#startDateDiv").empty();
+    $("#endDateDiv").empty();
+   switch (time){
+     
+       case "season":
+       $("#startDateDiv").append('<label for="startDate" id = "startDateText">请选择开始季度：</label>' + 
+       '<select class="form-control" id="startDate" name="startDate">'
     
-    var year = $("#year").val();
-    var month = [];
-    var pingtai = [];
-    var name = $("#name").val();
-    var myChartsix;
-    obj1 = document.getElementsByName("month");
-    for(k in obj1) {
-        if (obj1[k].checked)
-            month.push(obj1[k].value);
-    }
-    obj2 = document.getElementsByName("pingtai");
-    for(k in obj2) {
-        if (obj2[k].checked)
-            pingtai.push(obj2[k].value);
-    }
-    var errorMes = "";
-    if(name == "")
-      errorMes += "景区名字未填";
-     if(month.length == 0)
-     errorMes += "未选择月份";
-     if(pingtai.length == 0)
-     errorMes += "未选择平台";
-     if(errorMes != "")
-     swal("提醒",errorMes,"warning");
+        + '</select>');
+        $("#endDateDiv").append('<label for="endDate" id = "endDateText">请选择结束季度：</label>' + 
+        '<select class="form-control" id="endDate" name="endDate">'
+     
+         + '</select>');
+       for(var i = 1; i <= 4;i++) {
+      $("#startDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       $("#endDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       }
+       break;
+       case "month":
+     $("#startDateDiv").append('<label for="startDate" id = "startDateText">请选择开始月份：</label>' + 
+        '<select class="form-control" id="startDate" name="startDate">'
+     
+         + '</select>');
+         $("#endDateDiv").append('<label for="endDate" id = "endDateText">请选择结束月份：</label>' + 
+         '<select class="form-control" id="endDate" name="endDate">'
+      
+          + '</select>');  
+       for(var i = 1; i <= 12;i++) {
+       $("#startDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       $("#endDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       }
+       break;
+       case "week":
+       $("#startDateDiv").append('<label for="startDate" id = "startDateText">请选择开始周：</label>' + 
+       '<select class="form-control" id="startDate" name="startDate">'
+    
+        + '</select>');
+        $("#endDateDiv").append('<label for="endDate" id = "endDateText">请选择结束周：</label>' + 
+        '<select class="form-control" id="endDate" name="endDate">'
+     
+         + '</select>');
+       for(var i = 1; i <= 52;i++) {
+       $("#startDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       $("#endDate").append("<option value=" + "'" + i + "'" + ">" + i + "</option>"); 
+       }
+       break;
+       default:
+       break;
+
+   }
+})
+
+$("#submit").click(function () {
+  
+    var years = [];
+    var platforms = [];
+    var startDate = $("#startDate").val();
+    var endDate =  $("#endDate").val();
+    var time = $("#time").val(); 
+   years = $("#year").val();
+   platforms = $("#platform").val();
+   //查看是否有所有标签被选上
+   for(var i = 0; i < platforms.length;i++){
+       if(platforms[i] == '所有'){
+           platforms = [];
+           platforms = ['携程','艺龙','去哪儿','驴妈妈','马蜂窝','途牛','飞猪','大众点评'];
+              break;
+       }
+   }
+  
+    var errMes = "";
+    if(years.length == 0)
+    errMes += "未选择比较年份，"
+    if(platforms.length == 0)
+      errMes += "未选择平台，";
+    
+      if(startDate > endDate)
+      errMes += "开始时间不能大于结束时间"
+    if(errMes != "")
+    swal("提醒",errMes,"warning");  
      else{
         $.LoadingOverlay("show"); 
     var param = {
-        'pingtai':JSON.stringify(pingtai),
-        'year':year,
-        'month':JSON.stringify(month),
-        'name':$("#name").val()
+        'platforms':JSON.stringify(platforms),
+        'startDate':startDate,
+        'endDate':endDate,
+        'years':JSON.stringify(years),
+        'time':time
     };
     console.log(param);
     $.ajax({
@@ -38,221 +113,135 @@ $("#tijiao").click(function () {
             url:"/kindjq",
             type:"POST",
             data:param,
-            success:function (data) {
+            success:function (res) {
+                console.log(res);
                 $.LoadingOverlay("hide"); 
-                if(data.code == 0){
-                var Item = function () {
-                    return {
-                        name:'',
-                        type:'line',
-                        data:[]
-                    }
-                };
-        
-                var myChartfive = echarts.init(document.getElementById('result1'));
-                var Series = [];
-                for(var i=0;i<pingtai.length;i++){
-                    var it = new Item();
-                    it.name = pingtai[i];
-                    it.data = data['month_number'][i];
-                    Series.push(it);
-                }
-                 myChartsix = echarts.init(document.getElementById('result2'));
-               var option4 = {
-                   tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-        type: 'cross',
-        crossStyle: {
-            color: '#999'
-        }
-    }
-},
-legend: {
-    data:['差评','中评','好评']
-},
-xAxis: [
-    {
-        type: 'category',
-        data: month,
-        axisPointer: {
-            type: 'shadow'
-        }
-    }
-],
-yAxis: [
-    {
-        type: 'value',
-        name: '数量',
-        axisLabel: {
-            formatter: '{value}'
-        }
-    }
-],
-series: [
-    {
-        name:'好评',
-        type:'bar',
-        data:data['haoping']
-    },
-    {
-        name:'中评',
-        type:'bar',
-        data:data['zhongping']
-    },
-    {
-        name:'差评',
-        type:'bar',
-        data:data['chaping']
-    },
-]
-};
-       myChartfive.setOption(option4,true);
-
-
-        var option5 = {
-tooltip: {
-    trigger: 'axis'
-},
-legend: {
-    data:pingtai
-},
-xAxis:  {
-    type: 'category',
-    boundaryGap: false,
-    data: data['month']
-},
-yAxis: {
-    type: 'value',
-    axisLabel: {
-        formatter: '{value}'
-    }
-},
-series: []
-};
-        option5.series = Series;
-        myChartsix.setOption(option5,true);
+                options = [];
+                $("#resultDiv").empty();
+                    $.LoadingOverlay("hide");
+                    if(res.code == 0){
+                        $("#resultDiv").empty();
+                        $("#resultDiv").append('<div class = "row"><div class = "col-xs-3"><label for="resultSelect">请选择平台：</label>' + 
+                        '<select class="form-control" id="resultSelect" name="resultSelect">'
             
-    
-        var colors = ['#5793f3', '#d14a61', '#675bba'];
-                 var myChartone = echarts.init(document.getElementById('main1'));
-                 var myCharttwo = echarts.init(document.getElementById('main2'));
-                 var myChartthree = echarts.init(document.getElementById('main3'));
-                 var myChartfour = echarts.init(document.getElementById('main4'));
-                 var option = {
-                     tooltip: {},
-                     legend: {
-                         data:[]
-                     },
-                     xAxis: {
-                         name: '月份',
-                         data: data["monthIndexs"]
-                     },
-                     yAxis: {
-                     type: 'value',
-                     name: '数量',
-                     axisLabel: {
-                         formatter: '{value}'
-                     }
-         
-                     },
-                     series: [{
-                         name: '数量',
-                         type: 'bar',
-                         data:data["monthValues"]
-                     }]
-                 };
-                 var option1 = {
-                     tooltip: {},
-                     legend: {
-                         data:[]
-                     },
-                     xAxis: {
-                         name: '年份',
-                         data: data["yearIndexs"]
-                     },
-                     yAxis: {
-                     type: 'value',
-                     name: '数量',
-                     axisLabel: {
-                         formatter: '{value}'
-                     }
-         
-                     },
-                     series: [{
-                         name: '数量',
-                         type: 'bar',
-                         data: data["yearValues"]
-                     }]
-                 };
-                 var option2 = {
-                     tooltip: {},
-                     legend: {
-                         data:[]
-                     },
-                     xAxis: {
-                         name:'最近四周',
-                         data: data["weekIndexs"]
-                     },
-                     yAxis: {
-                     type: 'value',
-                     name: '数量',
-                     axisLabel: {
-                         formatter: '{value}'
-                     }
-         
-                     },
-                     series: [{
-                         name: '数量',
-                         type: 'bar',
-                         data: data["weekValues"]
-                     }]
-                 };
-                 var option3 = {
-                     tooltip: {},
-                     legend: {
-                         data:[]
-                     },
-                     xAxis: {
-                         name:'最近15天',
-                         data: data["dayIndexs"]
-                     },
-                     yAxis: {
-                     type: 'value',
-                     name: '数量',
-                     axisLabel: {
-                         formatter: '{value}'
-                     }
-         
-                     },
-                     series: [{
-                         name: '数量',
-                         type: 'bar',
-                         data: data["dayValues"]
-                     }]
-                 };
-                 myChartone.setOption(option);
-                 myCharttwo.setOption(option1);
-                 myChartthree.setOption(option2);
-                 myChartfour.setOption(option3);
-    
-                }else{
-                    swal("请求失败",data.message,"error");
-                }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+                     
+                         + '</select></div></div>');
+                         var commentDiv =  
+                         '<div id=' + "'" + "comments" + "'" + ' style="width:45%;height:400px;float:left"/>';
+                         var gradeDiv = '<div id=' + "'" + "grades" + "'" + ' style="width:45%;float:left;height:400px;"/>'
+                         $("#resultDiv").append(commentDiv);
+                         $("#resultDiv").append(gradeDiv);
+                    var data = res.data;
+                    console.log(data);
+                    for(var i = 0; i < data.platforms.length;i++){
+        
+                    var commentOption = {
+                        title:{
+                            text:data.platforms[i].platform + "评论数量变换"
+                        },
+                        tooltip:{
+                            trigger:"axis"
+                        },
+                        //折现有几条
+                        legend:{
+                            data:[]
+                        },
+                        xAxis : [
+                            {
+                                type : 'category',
+                                boundaryGap : false,
+                                data : data.dates
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}'
+                                }
+                            }
+                        ],
+                        series: [],
+                    };
+        
+                    var gradeOption = {
+                        title:{
+                            text:data.platforms[i].platform + "评分变化"
+                        },
+                        tooltip:{
+                            trigger:"axis"
+                        },
+                        //折现有几条
+                        legend:{
+                            data:[]
+                        },
+                        xAxis : [
+                            {
+                                type : 'category',
+                                boundaryGap : false,
+                                data : data.dates
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}'
+                                }
+                            }
+                        ],
+                        series: [],
+                    }
+        
+        
+        
+                        for(var j = 0; j < data.platforms[i].years.length;j++){
+                            var year =  data.platforms[i].years[j];
+                            commentOption.legend.data.push(year.year);
+                            gradeOption.legend.data.push(year.year);
+                                var commentItem = new Item();
+                                commentItem.name = year.year;
+                                commentItem.data = year.commentValue;
+                                commentOption.series.push(commentItem);
+                                var gradeItem = new Item();
+                                gradeItem.name = year.year;
+                                gradeItem.data = year.gradeValue;
+                                gradeOption.series.push(gradeItem);
+                            
+                        }
+                       
+          
+                        var option = {
+                            "platformName": data.platforms[i].platform,
+                            options:[commentOption,gradeOption]
+                        };
+                        options.push(option);
+               
+                      console.log(111);
+                      console.log(data.platforms[i].platform);
+                      $("#resultSelect").append("<option value=" + "'" + data.platforms[i].platform + "'" + ">" + data.platforms[i].platform + "</option>"); 
+                    
+                    }
+                    console.log(222);
+                    console.log(options[0].platformName);
+                     var commentChart = echarts.init(document.getElementById("comments"));
+                         commentChart.setOption(options[0].options[0], true);
+                         var gradeChart = echarts.init(document.getElementById("grades"));
+                         gradeChart.setOption(options[0].options[1], true);
+    //查看景区选择变化
+$("#resultSelect").change(function(){
+   
+    console.log(999999);
+    var i = 0;
+    for(;i < options.length;i++)
+    if(options[i].platformName ==  $("#resultSelect").val())
+    break;
+    var commentChart = echarts.init(document.getElementById("comments"));
+    commentChart.setOption(options[i].options[0], true);
+    var gradeChart = echarts.init(document.getElementById("grades"));
+    gradeChart.setOption(options[i].options[1], true);
+})
+            }
     
     
     
@@ -277,7 +266,14 @@ series: []
     
     
     
-    },
+    
+    
+    
+    
+    
+    
+    
+ },
             error:function () {
                 $.LoadingOverlay("hide"); 
               swal("请求失败","请尝试再次请求","error");

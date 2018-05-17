@@ -104,7 +104,9 @@ def comments_convert(data):
     data['season'] = data['month'].apply(season);
     data['yearSeason'] = data['year'].astype(str) + '.' + data['season'].astype(str)
     data['yearWeek'] = data['year'].astype(str) + '.' + data['week'].astype(str)
-
+    print (22334455);
+    print (data['comment_score_text']);
+    print (data['comment_type']);
     return data
 def shops_convert(data):
     data['shop_name'] = data['shop_name'].apply(change1)
@@ -547,6 +549,55 @@ def getCommentsSingleJq(jq,platform,startYear,endYear,startDate,endDate,time):
                     gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
                 dates.append(yearDates);
     return dates,commentsValues,gradesValues;
+
+
+#同环比数据的获取
+def getCommentsKindJq(year, platform, startDate, endDate, time):
+    commentsValues = [];
+    gradesValues = [];
+    dates = [];
+    yearDate = "";
+    if (time == 'season'):
+
+        yearDate = "yearSeason";
+    elif time == 'month':
+
+        yearDate = "yearMonth";
+    elif time == 'week':
+
+        yearDate = "yearWeek";
+
+    jq_comment_data = comments_data[(comments_data['data_source'] == '景点') & (comments_data['data_region'] == '千岛湖')];
+
+    if time == 'year':
+
+            jq_comments = jq_comment_data[
+                (jq_comment_data['data_website'] == platform) & (jq_comment_data['year'] == int(year))];
+
+            commentsValues.append(jq_comments.iloc[:, 0].size);
+            if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                gradesValues.append(0);
+            else:
+                gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+            dates.append(year);
+
+    else:
+        for date in range(int(startDate), int(endDate) + 1):
+            yearDates = str(year) + '.' + str(date)
+
+            jq_comments = jq_comment_data[
+                (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
+
+
+            commentsValues.append(jq_comments.iloc[:, 0].size);
+            if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                gradesValues.append(0);
+            else:
+                gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+            dates.append(date);
+
+    return dates, commentsValues, gradesValues;
+#所有平台上的总评论和总分
 
 def homepage(request):
     return render(request, 'singlejq.html');
