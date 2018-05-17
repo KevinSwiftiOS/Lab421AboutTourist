@@ -149,7 +149,7 @@ $("#submit").click(function () {
 
             var commentOption = {
                 title:{
-                    text:data.jqs[i].jq + "评论数量"
+                    text:"评论数量变化图："
                 },
                 tooltip:{
                     trigger:"axis"
@@ -177,7 +177,7 @@ $("#submit").click(function () {
             };
             var gradeOption = {
                 title:{
-                    text:data.jqs[i].jq + "评分"
+                    text:"评分变化图："
                 },
                 tooltip:{
                     trigger:"axis"

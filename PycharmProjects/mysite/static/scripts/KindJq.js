@@ -137,7 +137,7 @@ $("#submit").click(function () {
         
                     var commentOption = {
                         title:{
-                            text:data.platforms[i].platform + "评论数量变换"
+                            text:"评论数量变化图："
                         },
                         tooltip:{
                             trigger:"axis"
@@ -166,7 +166,7 @@ $("#submit").click(function () {
         
                     var gradeOption = {
                         title:{
-                            text:data.platforms[i].platform + "评分变化"
+                            text:"评分变化图："
                         },
                         tooltip:{
                             trigger:"axis"
