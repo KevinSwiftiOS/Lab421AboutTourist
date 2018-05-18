@@ -105,7 +105,7 @@ from django.shortcuts import render;
 import json
 
 
-def kindjq(request):
+def ComparedAnalysis(request):
 
     if request.is_ajax():
 
@@ -129,20 +129,20 @@ def kindjq(request):
         try:
             for i, platform in enumerate(platforms):
 
-                platforms = {
+                resplatforms = {
                     "platform": platform,
                     "years": []
                 };
                 for j, year in enumerate(years):
-                    comments['dates'], commentsValue,gradeValue = getCommentsKindJq(year, platform, startDate, endDate, time);
+                    comments['dates'], commentsValue,gradeValue = getCommentsComparedAnalysis(year, platform, startDate, endDate, time);
 
                     value = {
                         "year": year,
                         "commentValue": commentsValue,
                          "gradeValue":gradeValue
                     }
-                    platforms["years"].append(value);
-                comments["platforms"].append(platforms);
+                    resplatforms["years"].append(value);
+                comments["platforms"].append(resplatforms);
 
             res["data"] = comments;
             res["code"] = 0;
@@ -161,11 +161,11 @@ def kindjq(request):
             res["code"] = 2;
             res["message"] = "对类型无效的操作";
 
-        return render(request, 'kindjq.html')
+        return render(request, 'ComparedAnalysis.html')
 
     else:
 
-      return render(request, 'kindjq.html')
+      return render(request, 'ComparedAnalysis.html')
 
 
 

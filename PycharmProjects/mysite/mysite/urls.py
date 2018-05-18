@@ -17,15 +17,17 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 from . import initViews
-from .Views.ViewsSingleJq import singlejq
-from .Views.ViewsAllJq import alljq
-from .Views.ViewsKindJq import kindjq
+from .Views.ViewsInnerScenic import InnerScenic
+from .Views.ViewsCircularAnalysis import CircularAnalysis
+from .Views.ViewsComparedAnalysis import ComparedAnalysis
+from .Views.ViewsRecentState import RecentState
 admin.autodiscover()
 urlpatterns = [
     url(r'^admin',admin.site.urls),
     url(r'^$', initViews.homepage),
-    url(r'^singlejq$',singlejq,name='singlejq'),
-    url(r'^kindjq$',kindjq,name='kindjq'),
-    url(r'^alljq$',alljq,name='alljq'),
+    url(r'^InnerScenic$',InnerScenic,name='InnerScenic'),
+    url(r'^ComparedAnalysis$',ComparedAnalysis,name='ComparedAnalysis'),
+    url(r'^CircularAnalysis$',CircularAnalysis,name='CircularAnalysis'),
+    url(r'^RecentState$', RecentState, name='RecentState'),
     #url(r'^index2$',views.index2,name='index2'),
 ]

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>环比分析</title>
+    <title>内部景区</title>
     <!-- 引入 echarts.js -->
     <link href="../static/libs/boostrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../static/libs/boostrap/css/font-awesome.min.css" rel="stylesheet">
@@ -83,15 +83,17 @@
                     <nav class="navbar-default navbar-side" role="navigation">
                         <div class="sidebar-collapse">
                             <ul class="nav" id="main-menu">
-            
                                 <li>
-                                    <a href="/singlejq"><i class="fa fa-bar-chart-o"></i> 内部景区</a>
+                                    <a href="/InnerScenic"  class="active-menu"><i class="fa fa-bar-chart-o"></i> 内部景区</a>
                                 </li>
                                 <li>
-                                    <a href="/alljq" class="active-menu"><i class="fa fa-bar-chart-o"></i>环比分析</a>
+                                    <a href="/CircularAnalysis"><i class="fa fa-bar-chart-o"></i>环比分析</a>
                                 </li>
                                 <li>
-                                    <a href="/kindjq"><i class="fa fa-bar-chart-o"></i> 同比分析</a>
+                                    <a href="/ComparedAnalysis"><i class="fa fa-bar-chart-o"></i> 同比分析</a>
+                                </li>
+                                <li>
+                                    <a href="/RecentState"><i class="fa fa-bar-chart-o"></i>景区动态</a>
                                 </li>
                                 
                                 
@@ -109,7 +111,7 @@
                                     <div class="row">
                                             <div class="col-md-12">
                                                 <h1 class="page-header">
-                                                    千岛湖 <small>与其余景区评论分析</small>
+                                                    千岛湖 <small>内部景区评论分析</small>
                                                 </h1>
                                             </div>
                                         </div>
@@ -120,7 +122,7 @@
                                                         
                                                         </div>
                                                         <div class="panel-body">
-                                                                <form role="form" action="/alljq" method="POST">
+                                                                <form role="form" action="/InnerScenic" method="POST">
                                                             <div class="row">
                                                         <div class="col-lg-12">
                                                               
@@ -130,11 +132,13 @@
                                                                             <div class="col-xs-3">
                                                                 
                                                                         <div class="form-group">
-                                                                                <label>请选择对比景区：</label>
+                                                                                <label>请选择内部景区：</label>
                                                                                 <select  id = "jq" multiple="multiple" class="form-control">
-                                                                                    <option  value="西湖">西湖</option>
-                                                                                    <option   value="溪口">溪口</option>
-                                                                             
+                                                                                    <option  value="千岛湖钓鱼岛">千岛湖钓鱼岛</option>
+                                                                                    <option   value="千岛湖中心湖">千岛湖中心湖</option>
+                                                                                    <option  value="千岛湖森林氧吧">千岛湖森林氧吧</option>
+                                                                                    <option  value="白云溪漂流">白云溪漂流</option>
+                                                                                    <option   value="千岛湖海洋馆">千岛湖海洋馆</option>
                                                                               
                                                                                 </select>
                                                                             </div>
@@ -242,7 +246,7 @@
 
 
    
-    <script src="../static/scripts/AllJq.js"></script>
+    <script src="../static/scripts/InnerScenic.js"></script>
 </body>
 
 </html>

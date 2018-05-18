@@ -85,9 +85,9 @@ $("#submit").click(function () {
     //景区获取
     
     jqs = $("#jq").val();
-    jqs.push("千岛湖");
+  
  //千岛湖要push
- 
+     jqs.push("千岛湖");
  platforms = $("#platform").val();
    //查看是否有所有标签被选上
    for(var i = 0; i < platforms.length;i++){
@@ -125,7 +125,7 @@ $("#submit").click(function () {
     console.log(param);
     $.ajax({
         headers: { "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').val() },
-        url: "/alljq",
+        url: "/CircularAnalysis",
         type: "POST",
         data: param,
         success: function (res) {
@@ -143,15 +143,15 @@ $("#submit").click(function () {
          
              + '</select></div></div>');
              var commentDiv =  
-             '<div id=' + "'" + "comments" + "'" + ' style="width:45%;height:400px;float:left"/>';
-             var gradeDiv = '<div id=' + "'" + "grades" + "'" + ' style="width:45%;float:left;height:400px;"/>'
+             '<div id=' + "'" + "comments" + "'" + ' style="width:100%;height:400px;float:left"/>';
+             var gradeDiv = '<div id=' + "'" + "grades" + "'" + ' style="width:100%;float:left;height:400px;"/>'
              $("#resultDiv").append(commentDiv);
              $("#resultDiv").append(gradeDiv);
             for(var i = 0; i < data.platforms.length;i++){
 
             var commentOption = {
                 title:{
-                    text: "评论数量变化图："
+                    text: "评论变化图："
                 },
                 tooltip:{
                     trigger:"axis"

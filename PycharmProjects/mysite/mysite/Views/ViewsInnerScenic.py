@@ -1,7 +1,7 @@
 from ..initViews import *;
 from django.shortcuts import render;
 import json
-def singlejq(request):
+def InnerScenic(request):
   # if request.is_ajax():
   #   #景区名是否合法
   #
@@ -223,20 +223,20 @@ def singlejq(request):
         }
         try:
             for i, jq in enumerate(jqs):
-                jqs = {
+                resjqs = {
                     "jq": jq,
                     "platforms": []
                 };
                 for j, platform in enumerate(platforms):
-                    data['dates'], commentValue,gradeValue = getCommentsSingleJq(jq, platform, startYear, endYear, startDate, endDate, time);
+                    data['dates'], commentValue,gradeValue = getCommentsInnerScenic(jq, platform, startYear, endYear, startDate, endDate, time);
 
                     value = {
                         "name": platform,
                         "commentValue": commentValue,
                         "gradeValue":gradeValue
                     }
-                    jqs["platforms"].append(value);
-                data["jqs"].append(jqs);
+                    resjqs["platforms"].append(value);
+                data["jqs"].append(resjqs);
 
             res["data"] = data;
             res["code"] = 0;
@@ -255,8 +255,8 @@ def singlejq(request):
             res["message"] = "对类型无效的操作";
 
 
-        return render(request, 'singlejq.html')
+        return render(request, 'InnerScenic.html')
 
     else:
 
-      return render(request, 'singlejq.html')
+      return render(request, 'InnerScenic.html')

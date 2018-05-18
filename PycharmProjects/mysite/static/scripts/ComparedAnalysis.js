@@ -110,7 +110,7 @@ $("#submit").click(function () {
     console.log(param);
     $.ajax({
             headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
-            url:"/kindjq",
+            url:"/ComparedAnalysis",
             type:"POST",
             data:param,
             success:function (res) {
@@ -127,8 +127,8 @@ $("#submit").click(function () {
                      
                          + '</select></div></div>');
                          var commentDiv =  
-                         '<div id=' + "'" + "comments" + "'" + ' style="width:45%;height:400px;float:left"/>';
-                         var gradeDiv = '<div id=' + "'" + "grades" + "'" + ' style="width:45%;float:left;height:400px;"/>'
+                         '<div id=' + "'" + "comments" + "'" + ' style="width:100%;height:400px;float:left"/>';
+                         var gradeDiv = '<div id=' + "'" + "grades" + "'" + ' style="width:100%;float:left;height:400px;"/>'
                          $("#resultDiv").append(commentDiv);
                          $("#resultDiv").append(gradeDiv);
                     var data = res.data;
@@ -137,14 +137,14 @@ $("#submit").click(function () {
         
                     var commentOption = {
                         title:{
-                            text:"评论数量变化图："
+                            text:"评论数量变化图：\n"
                         },
                         tooltip:{
                             trigger:"axis"
                         },
                         //折现有几条
                         legend:{
-                            data:[]
+                            data:[' ']
                         },
                         xAxis : [
                             {
@@ -173,7 +173,7 @@ $("#submit").click(function () {
                         },
                         //折现有几条
                         legend:{
-                            data:[]
+                            data:[' ']
                         },
                         xAxis : [
                             {

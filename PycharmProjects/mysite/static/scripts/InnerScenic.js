@@ -122,7 +122,7 @@ $("#submit").click(function () {
  
     $.ajax({
         headers: { "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').val() },
-        url: "/singlejq",
+        url: "/InnerScenic",
         type: "POST",
         data: param,
         success: function (res) {
@@ -141,15 +141,15 @@ $("#submit").click(function () {
          
              + '</select></div></div>');
              var commentDiv =  
-             '<div id=' + "'" + "comments" + "'" + ' style="width:45%;height:400px;float:left"/>';
-             var gradeDiv = '<div id=' + "'" + "grades" + "'" + ' style="width:45%;float:left;height:400px;"/>'
+             '<div id=' + "'" + "comments" + "'" + ' style="width:100%;height:400px;float:left"/>';
+             var gradeDiv = '<div id=' + "'" + "grades" + "'" + ' style="width:100%;float:left;height:400px;"/>'
              $("#resultDiv").append(commentDiv);
              $("#resultDiv").append(gradeDiv);
             for(var i = 0; i < data.jqs.length;i++){
 
             var commentOption = {
                 title:{
-                    text:"评论数量变化图："
+                    text:"评论变化图："
                 },
                 tooltip:{
                     trigger:"axis"
@@ -184,6 +184,8 @@ $("#submit").click(function () {
                 },
                 //折现有几条
                 legend:{
+                   
+                 
                     data:[]
                 },
                 xAxis : [
@@ -207,7 +209,10 @@ $("#submit").click(function () {
                     var platform =  data.jqs[i].platforms[j];
                   
                     commentOption.legend.data.push(platform.name);
+                       
+                   
                     gradeOption.legend.data.push(platform.name);
+                   
                         var commentItem = new Item();
                         commentItem.name = platform.name;
                         commentItem.data = platform.commentValue;
@@ -218,6 +223,9 @@ $("#submit").click(function () {
                         gradeOption.series.push(gradeItem);
                     
                 }
+                console.log(23456);
+              
+                console.log(gradeOption.legend.data);
                 var option = {
                     "jqName": data.jqs[i].jq,
                     options:[commentOption,gradeOption]

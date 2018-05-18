@@ -104,9 +104,7 @@ def comments_convert(data):
     data['season'] = data['month'].apply(season);
     data['yearSeason'] = data['year'].astype(str) + '.' + data['season'].astype(str)
     data['yearWeek'] = data['year'].astype(str) + '.' + data['week'].astype(str)
-    print (22334455);
-    print (data['comment_score_text']);
-    print (data['comment_type']);
+
     return data
 def shops_convert(data):
     data['shop_name'] = data['shop_name'].apply(change1)
@@ -373,8 +371,8 @@ def getGradesAllJq(jq,platform,startYear,endYear,startDate,endDate,time):
             dates.append(year);
 
 
-#所有景区根据时间间隔 平台 景点 获取评论数
-def getCommentsAllJq(jq,platform,startYear,endYear,startDate,endDate,time):
+#千岛湖环比分析根据时间间隔 平台 景点 获取评论数
+def getCommentsCircularAnalysis(jq,platform,startYear,endYear,startDate,endDate,time):
     commentsValues = [];
     gradesValues = [];
     dates = [];
@@ -465,7 +463,7 @@ def getCommentsAllJq(jq,platform,startYear,endYear,startDate,endDate,time):
 
     return dates,commentsValues,gradesValues;
 #千岛湖内部单个景区根据平台 开始 结束 时间间隔的变化
-def getCommentsSingleJq(jq,platform,startYear,endYear,startDate,endDate,time):
+def getCommentsInnerScenic(jq,platform,startYear,endYear,startDate,endDate,time):
     commentsValues = [];
     gradesValues = [];
     dates = [];
@@ -551,8 +549,8 @@ def getCommentsSingleJq(jq,platform,startYear,endYear,startDate,endDate,time):
     return dates,commentsValues,gradesValues;
 
 
-#同环比数据的获取
-def getCommentsKindJq(year, platform, startDate, endDate, time):
+#千岛湖同比分析数据的获取
+def getCommentsComparedAnalysis(year, platform, startDate, endDate, time):
     commentsValues = [];
     gradesValues = [];
     dates = [];
@@ -597,10 +595,55 @@ def getCommentsKindJq(year, platform, startDate, endDate, time):
             dates.append(date);
 
     return dates, commentsValues, gradesValues;
-#所有平台上的总评论和总分
+#所有平台上的总评论和总分 获取最近的动态
+def getCommentsRecentState(time,platform,jq):
+    #获取时间 返回值
+    commentsValues = 0;
+    gradesValues = 0;
+    year = datetime.datetime.now().year;
+    month = datetime.datetime.now().month;
+    day = datetime.datetime.now().day;
+    season = 0;
+    yearDate = "";
+    date = "";
+    print (comments_data);
+    jq_comments = comments_data[
+        (comments_data['data_source'] == '景点') & (comments_data['data_region'] == jq) & (
+            comments_data['data_website'] == platform)];
+    if(month % 3 == 0):
+        season  = int(month / 3);
+    else:
+        season =  int(math.floor(month / 3) + 1);
+    if(time == 'year'):
+        yearDate = "year";
+        jq_comments = jq_comments[(jq_comments['year'] == int(year))];
+    elif time == "season":
+        yearDate = "yearSeason"
+        date = str(year) + "." + str(season);
+        jq_comments = jq_comments[(jq_comments['yearSeason'] == date)];
+    elif time == "month":
+        yearDate = "yearMonth"
+        date = str(year) + "." + str(month);
+        jq_comments = jq_comments[(jq_comments['yearMonth'] == date)];
+    elif time == "week":
+        yearDate = "yearWeek";
+        #周的再想一下
+        date = str(year);
+
+
+    print (jq_comments);
+    if (round(jq_comments['comment_grade'].mean() is np.nan)):
+        gradesValues = 0;
+    else:
+        gradesValues = (round(jq_comments['comment_grade'].mean(), 1));
+    commentsValues = jq_comments.iloc[:, 0].size;
+    return  commentsValues,gradesValues;
+
+
+
 
 def homepage(request):
-    return render(request, 'singlejq.html');
+    return render(request, 'InnerScenic.html');
 
 
 

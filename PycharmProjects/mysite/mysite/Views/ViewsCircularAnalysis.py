@@ -3,7 +3,7 @@ from django.shortcuts import render;
 import json
 
 
-def alljq(request):
+def CircularAnalysis(request):
     if request.is_ajax():
 
         dict = {}
@@ -28,20 +28,20 @@ def alljq(request):
         }
         try:
             for i, platform in enumerate(platforms):
-                platforms = {
+                resplatforms = {
                     "platform": platform,
                     "jqs": []
                 };
                 for j, jq in enumerate(jqs):
-                    comments['dates'], commentsValue,gradeValue = getCommentsAllJq(jq, platform, startYear, endYear, startDate, endDate, time);
+                    comments['dates'], commentsValue,gradeValue = getCommentsCircularAnalysis(jq, platform, startYear, endYear, startDate, endDate, time);
 
                     value = {
                         "name": jq,
                         "commentValue": commentsValue,
                          "gradeValue":gradeValue
                     }
-                    platforms["jqs"].append(value);
-                comments["platforms"].append(platforms);
+                    resplatforms["jqs"].append(value);
+                comments["platforms"].append(resplatforms);
 
             res["data"] = comments;
             res["code"] = 0;
@@ -60,11 +60,11 @@ def alljq(request):
             res["code"] = 2;
             res["message"] = "对类型无效的操作";
 
-        return render(request, 'alljq.html')
+        return render(request, 'CircularAnalysis.html')
 
     else:
 
-      return render(request, 'alljq.html')
+      return render(request, 'CircularAnalysis.html')
 
 
 
