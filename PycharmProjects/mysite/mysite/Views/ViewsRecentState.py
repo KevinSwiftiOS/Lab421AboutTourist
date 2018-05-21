@@ -32,6 +32,7 @@ def RecentState(request):
                 for j,platform in enumerate(platforms):
 
                     commentValue,gradeValue = getCommentsRecentState(time,platform,jq);
+
                     value = {
                         "name":platform,
                         "commentValue": commentValue,
@@ -41,7 +42,7 @@ def RecentState(request):
                 comments["times"].append(restimes);
             res["data"] = comments;
             res["code"] = 0;
-            print (res);
+
             return JsonResponse(eval(repr(res)));
         except KeyError:
 

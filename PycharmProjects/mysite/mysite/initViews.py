@@ -595,48 +595,140 @@ def getCommentsComparedAnalysis(year, platform, startDate, endDate, time):
             dates.append(date);
 
     return dates, commentsValues, gradesValues;
+def isLeapYear(year):
+    if(year % 400 == 0):
+     return 1;
+    elif(year % 100 != 0 and year % 4 == 0):
+     return 1;
+    else:
+     return 0;
 #所有平台上的总评论和总分 获取最近的动态
 def getCommentsRecentState(time,platform,jq):
     #获取时间 返回值
     commentsValues = 0;
     gradesValues = 0;
+    grades = 0;
     year = datetime.datetime.now().year;
     month = datetime.datetime.now().month;
     day = datetime.datetime.now().day;
+
     season = 0;
     yearDate = "";
     date = "";
-    print (comments_data);
     jq_comments = comments_data[
         (comments_data['data_source'] == '景点') & (comments_data['data_region'] == jq) & (
             comments_data['data_website'] == platform)];
+
     if(month % 3 == 0):
         season  = int(month / 3);
     else:
         season =  int(math.floor(month / 3) + 1);
     if(time == 'year'):
-        yearDate = "year";
-        jq_comments = jq_comments[(jq_comments['year'] == int(year))];
+        #获取当前月与当前年份 比如当前月份是2018年5月 则截取时间为2017.5-2018.5
+
+        for i in range(0,12):
+            if(month > 1):
+                month -= 1
+            else:
+                year -= 1
+                month = 12;
+            yearDate = str(year) + "." + str(month)
+
+
+
+            jq_comments_vaules = jq_comments[(jq_comments['yearMonth'] == str(yearDate))];
+            if (round(jq_comments_vaules['comment_grade'].mean() is np.nan)):
+                grades += 0;
+            else:
+                grades += (round(jq_comments['comment_grade'].mean(), 1));
+            commentsValues += jq_comments_vaules.iloc[:, 0].size;
+        gradesValues = round(grades / 12,1);
     elif time == "season":
-        yearDate = "yearSeason"
-        date = str(year) + "." + str(season);
-        jq_comments = jq_comments[(jq_comments['yearSeason'] == date)];
+
+        for i in range(0,3):
+
+                if (month > 1):
+                    month -= 1
+                else:
+                    year -= 1
+                    month = 12;
+
+                yearDate = str(year) + "." + str(month)
+
+                jq_comments_vaules = jq_comments[(jq_comments['yearMonth'] == str(yearDate))];
+                if (round(jq_comments_vaules['comment_grade'].mean() is np.nan)):
+                  grades += 0;
+                else:
+                   grades += (round(jq_comments['comment_grade'].mean(), 1));
+                commentsValues += jq_comments_vaules.iloc[:, 0].size;
+        gradesValues = round(grades / 3,1);
     elif time == "month":
-        yearDate = "yearMonth"
-        date = str(year) + "." + str(month);
-        jq_comments = jq_comments[(jq_comments['yearMonth'] == date)];
+        days = [[31,28,31,30,31,30,31,31,30,31,30,31],
+                [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]];
+        for i in range(0, 30):
+
+                if (day > 1):
+                    day -= 1
+                else:
+                    if (month > 1):
+                        month -= 1
+                        day = days[isLeapYear(year)][month - 1];
+                    else:
+                        year -= 1
+                        month = 12;
+                        day = 31;
+
+                if(month < 10):
+                 monthStr = str(0) + str(month);
+                else:
+                 monthStr = str(month);
+                if(day < 10):
+                 dayStr = str(0) + str(day);
+                else:
+                 dayStr = str(day);
+                 yearDay = str(year) + "-" + monthStr + "-" + dayStr;
+
+                 jq_comments_vaules = jq_comments[(jq_comments['day'] == str(yearDay))];
+                 if (round(jq_comments_vaules['comment_grade'].mean() is np.nan)):
+                     grades += 0;
+                 else:
+                     grades += (round(jq_comments['comment_grade'].mean(), 1));
+                 commentsValues += jq_comments_vaules.iloc[:, 0].size;
+        gradesValues = round(grades / 30,1);
     elif time == "week":
-        yearDate = "yearWeek";
-        #周的再想一下
-        date = str(year);
+        days = [[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+                [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]];
+        for i in range(0, 7):
 
+            if (day > 1):
+                day -= 1
+            else:
+                if (month > 1):
+                    month -= 1
+                    day = days[isLeapYear(year)][month - 1];
+                else:
+                    year -= 1
+                    month = 12;
+                    day = 31;
 
-    print (jq_comments);
-    if (round(jq_comments['comment_grade'].mean() is np.nan)):
-        gradesValues = 0;
-    else:
-        gradesValues = (round(jq_comments['comment_grade'].mean(), 1));
-    commentsValues = jq_comments.iloc[:, 0].size;
+            if (month < 10):
+                monthStr = str(0) + str(month);
+            else:
+                monthStr = str(month);
+            if (day < 10):
+                dayStr = str(0) + str(day);
+            else:
+                dayStr = str(day);
+                yearDay = str(year) + "-" + monthStr + "-" + dayStr;
+
+                jq_comments_vaules = jq_comments[(jq_comments['day'] == str(yearDay))];
+                if (round(jq_comments_vaules['comment_grade'].mean() is np.nan)):
+                    grades += 0;
+                else:
+                    grades += (round(jq_comments['comment_grade'].mean(), 1));
+                commentsValues += jq_comments_vaules.iloc[:, 0].size;
+        gradesValues = round(grades / 7,1);
+
     return  commentsValues,gradesValues;
 
 

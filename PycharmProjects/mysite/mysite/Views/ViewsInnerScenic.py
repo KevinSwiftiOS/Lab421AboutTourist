@@ -198,7 +198,7 @@ def InnerScenic(request):
   # else:
   #   return render(request, 'singlejq.html');
     if request.is_ajax():
-        print (111);
+
 
         dict = {}
         # 获取数据
@@ -210,8 +210,7 @@ def InnerScenic(request):
         endYear = request.POST.get('endYear')
         endDate = request.POST.get('endDate')
         time = request.POST.get('time')
-        print (jqs);
-        print (platforms);
+
         # name = eval(name[0])
         # month = eval(month[0])
         data = {
