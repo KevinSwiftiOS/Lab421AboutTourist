@@ -32,7 +32,42 @@ def CircularAnalysis(request):
                     "platform": platform,
                     "jqs": []
                 };
-                for j, jq in enumerate(jqs):
+                if platform == '所有':
+                    allPlatforms = ['携程', '艺龙', '去哪儿', '驴妈妈', '马蜂窝', '途牛', '飞猪', '大众点评'];
+
+
+
+                    for a,jq in enumerate(jqs):
+
+                        allComments = [];
+                        allGrades = [];
+                        firstTime = True;
+                        for b,pla in enumerate(allPlatforms):
+                          comments['dates'], commentsValue, gradeValue = getCommentsCircularAnalysis(jq, pla, startYear, endYear,
+                                                                                                   startDate, endDate,time);
+
+                          if (firstTime):
+                              allComments = commentsValue;
+                              allGrades = gradeValue;
+                              firstTime = False;
+
+                          else:
+                              for c in range(0,len(comments['dates'])):
+                                  allComments[c] += commentsValue[c];
+                                  allGrades[c] += gradeValue[c];
+                        for c,grade in enumerate(allGrades):
+
+                              allGrades[c] = round(grade * 1.0 / 8,1);
+                        oneValue = {
+                            "name": jq,
+                            "commentValue": allComments,
+                            "gradeValue": allGrades
+                        };
+
+                        resplatforms["jqs"].append(oneValue);
+
+                else:
+                  for j, jq in enumerate(jqs):
                     comments['dates'], commentsValue,gradeValue = getCommentsCircularAnalysis(jq, platform, startYear, endYear, startDate, endDate, time);
 
                     value = {
@@ -40,7 +75,9 @@ def CircularAnalysis(request):
                         "commentValue": commentsValue,
                          "gradeValue":gradeValue
                     }
+
                     resplatforms["jqs"].append(value);
+
                 comments["platforms"].append(resplatforms);
 
             res["data"] = comments;

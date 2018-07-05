@@ -211,6 +211,7 @@ def InnerScenic(request):
         endDate = request.POST.get('endDate')
         time = request.POST.get('time')
 
+
         # name = eval(name[0])
         # month = eval(month[0])
         data = {
@@ -226,15 +227,66 @@ def InnerScenic(request):
                     "jq": jq,
                     "platforms": []
                 };
-                for j, platform in enumerate(platforms):
-                    data['dates'], commentValue,gradeValue = getCommentsInnerScenic(jq, platform, startYear, endYear, startDate, endDate, time);
 
-                    value = {
+                for j, platform in enumerate(platforms):
+                    if platform == '所有':
+
+                       allPlatforms =  ['携程','艺龙','去哪儿','驴妈妈','马蜂窝','途牛','飞猪','大众点评'];
+                       allresjq = {
+                           "jq": jq,
+                           "platforms": []
+                       }
+                       for k,pla in enumerate(allPlatforms):
+                           data['dates'], commentValue, gradeValue = getCommentsInnerScenic(jq, pla, startYear,
+                                                                                            endYear, startDate, endDate,
+                                                                                            time);
+                           oneValue = {
+                               "name": pla,
+                               "commentValue": commentValue,
+                               "gradeValue": gradeValue
+                           }
+                           allresjq['platforms'].append(oneValue);
+
+                           # 进行全部添加
+
+                       allComments = 0;
+                       allGrades = 0;
+
+                       platforms = allresjq["platforms"];
+
+                       commentValue = [];
+                       gradeValue = [];
+                       for a in range(0, len(data['dates'])):
+                          allComments = 0;
+                          allGrades = 0;
+                          for b, platform in enumerate(platforms):
+
+                              allComments += platform["commentValue"][a];
+                              allGrades += platform["gradeValue"][a];
+
+                          commentValue.append(allComments);
+                          gradeValue.append(round(allGrades * 1.0 / 8));
+
+                       value = {
+                               "name": "所有",
+                               "commentValue": commentValue,
+                               "gradeValue": gradeValue
+                       };
+
+                    else:
+                       data['dates'], commentValue,gradeValue = getCommentsInnerScenic(jq, platform, startYear, endYear, startDate, endDate, time);
+
+                       value = {
                         "name": platform,
                         "commentValue": commentValue,
                         "gradeValue":gradeValue
-                    }
+                       }
+
+
+
                     resjqs["platforms"].append(value);
+
+
                 data["jqs"].append(resjqs);
 
             res["data"] = data;

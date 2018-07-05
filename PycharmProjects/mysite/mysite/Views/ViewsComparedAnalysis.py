@@ -133,7 +133,38 @@ def ComparedAnalysis(request):
                     "platform": platform,
                     "years": []
                 };
-                for j, year in enumerate(years):
+                if platform == '所有':
+                    print(111);
+                    allPlatforms = ['携程', '艺龙', '去哪儿', '驴妈妈', '马蜂窝', '途牛', '飞猪', '大众点评'];
+                    for a,year in enumerate(years):
+                        allComments = [];
+                        allGrades = [];
+                        firstTime = True;
+                        for b,pla in enumerate(allPlatforms):
+                            comments['dates'], commentsValue, gradeValue = getCommentsComparedAnalysis(year, pla,
+                                                                                                       startDate,
+                                                                                                       endDate, time);
+                            if(firstTime):
+                                allComments = commentsValue;
+                                allGrades = gradeValue;
+                                firstTime = False;
+                            else:
+                                for c in range(0,len(comments['dates'])):
+                                    allComments[c] += commentsValue[c];
+                                    allGrades[c] += gradeValue[c];
+                        for c,grade in enumerate(allGrades):
+                           allGrades[c] = round(grade * 1.0 / 8);
+                        oneValue = {
+                            "year": year,
+                            "commentValue": allComments,
+                            "gradeValue": allGrades
+                        };
+                        print(222);
+                        print(oneValue);
+                        resplatforms["years"].append(oneValue);
+
+                else:
+                 for j, year in enumerate(years):
                     comments['dates'], commentsValue,gradeValue = getCommentsComparedAnalysis(year, platform, startDate, endDate, time);
 
                     value = {
@@ -141,6 +172,8 @@ def ComparedAnalysis(request):
                         "commentValue": commentsValue,
                          "gradeValue":gradeValue
                     }
+                    print(111);
+                    print(value);
                     resplatforms["years"].append(value);
                 comments["platforms"].append(resplatforms);
 

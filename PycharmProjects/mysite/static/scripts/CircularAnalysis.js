@@ -90,13 +90,6 @@ $("#submit").click(function () {
      jqs.push("千岛湖");
  platforms = $("#platform").val();
    //查看是否有所有标签被选上
-   for(var i = 0; i < platforms.length;i++){
-       if(platforms[i] == '所有'){
-           platforms = [];
-           platforms = ['携程','艺龙','去哪儿','驴妈妈','马蜂窝','途牛','飞猪','大众点评'];
-              break;
-       }
-   }
   
     var errMes = "";
     if(jqs.length == 0)

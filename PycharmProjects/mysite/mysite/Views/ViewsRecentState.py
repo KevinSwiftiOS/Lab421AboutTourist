@@ -58,5 +58,5 @@ def RecentState(request):
 
 
     else:
-      print(2);
+
       return render(request, 'RecentState.html')

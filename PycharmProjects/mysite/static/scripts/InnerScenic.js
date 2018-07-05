@@ -88,13 +88,9 @@ $("#submit").click(function () {
  jqs = $("#jq").val();
  platforms = $("#platform").val();
    //查看是否有所有标签被选上
-   for(var i = 0; i < platforms.length;i++){
-       if(platforms[i] == '所有'){
-           platforms = [];
-           platforms = ['携程','艺龙','去哪儿','驴妈妈','马蜂窝','途牛','飞猪','大众点评'];
-              break;
-       }
-   }
+   //是否是所有景区的
+  
+
   
     var errMes = "";
     if(jqs.length == 0)
@@ -117,7 +113,8 @@ $("#submit").click(function () {
         'startDate':startDate,
         'endDate':endDate,
         'platforms':JSON.stringify(platforms),
-        'time':time
+        'time':time,
+       
     };
  
     $.ajax({
@@ -132,7 +129,7 @@ $("#submit").click(function () {
             options = [];
             if(res.code == 0){
             var data = res.data;
-            console.log(data);
+        
          
          
             $("#resultDiv").append('<div class = "row"><div class = "col-xs-3"><label for="resultSelect">请选择景区：</label>' + 
@@ -223,22 +220,18 @@ $("#submit").click(function () {
                         gradeOption.series.push(gradeItem);
                     
                 }
-                console.log(23456);
-              
-                console.log(gradeOption.legend.data);
+               
                 var option = {
                     "jqName": data.jqs[i].jq,
                     options:[commentOption,gradeOption]
                 };
                 options.push(option);
        
-              console.log(111);
-              console.log(data.jqs[i].jq);
+           
               $("#resultSelect").append("<option value=" + "'" + data.jqs[i].jq + "'" + ">" + data.jqs[i].jq  + "</option>"); 
             
             }
-            console.log(222);
-            console.log(options[0].jqName);
+   
              var commentChart = echarts.init(document.getElementById("comments"));
                  commentChart.setOption(options[0].options[0], true);
                  var gradeChart = echarts.init(document.getElementById("grades"));
@@ -246,7 +239,7 @@ $("#submit").click(function () {
 //查看景区选择变化
 $("#resultSelect").change(function(){
    
-    console.log(999999);
+ 
     var i = 0;
     for(;i < options.length;i++)
     if(options[i].jqName ==  $("#resultSelect").val())

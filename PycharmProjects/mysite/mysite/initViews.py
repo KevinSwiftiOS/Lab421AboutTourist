@@ -1,7 +1,7 @@
 
 from __future__ import unicode_literals #版本的兼容性
 import pandas as pd
-import mysql.connector
+
 import re
 import json
 from django.shortcuts import render
@@ -20,8 +20,8 @@ import  csv
 
 # database = client['dspider2']
 #读入数据
-shops_data = DataFrame(pd.read_csv('/Users/hcnucai/Documents/github/Lab421AboutTourist/shops_data_54.csv',sep = ' '));
-comments_data = DataFrame(pd.read_csv('/Users/hcnucai/Documents/github/Lab421AboutTourist/comments_data_54.csv',sep = ' '));
+shops_data = DataFrame(pd.read_csv('F:\GitHub\Lab421AboutTourist\shops_data_54.csv',sep = ' '));
+comments_data = DataFrame(pd.read_csv('F:\GitHub\Lab421AboutTourist\comments_data_54.csv',sep = ' '));
 #dframe1 = pd.read_excel("/Users/hcnucai/Desktop/Lab421/comment_data\(UTF-8\)5.4.xlsx",sheetname="Sheet1");
 
 # print(comments_tb);
