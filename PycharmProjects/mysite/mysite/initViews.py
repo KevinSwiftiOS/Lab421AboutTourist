@@ -16,18 +16,19 @@ import datetime
 import math
 import  csv
 
-# client = pymongo.MongoClient('10.66.93.125',27017)
 
-# database = client['dspider2']
+client = pymongo.MongoClient('localhost',27517)
+
+database = client['dspider2']
 #读入数据
-shops_data = DataFrame(pd.read_csv('F:\GitHub\Lab421AboutTourist\shops_data_54.csv',sep = ' '));
-comments_data = DataFrame(pd.read_csv('F:\GitHub\Lab421AboutTourist\comments_data_54.csv',sep = ' '));
+# shops_data = DataFrame(pd.read_csv('/home/ckq/文档/github/Lab421AboutTourist/shops_data_54.csv',sep = ' '));
+# comments_data = DataFrame(pd.read_csv('/home/ckq/文档/github/Lab421AboutTourist/comments_data_54.csv',sep = ' '));
 #dframe1 = pd.read_excel("/Users/hcnucai/Desktop/Lab421/comment_data\(UTF-8\)5.4.xlsx",sheetname="Sheet1");
+comments_tb = database.comments;
+shops_tb = database.shops;
 
-# print(comments_tb);
-# print(shops_tb);
-# shops_data = DataFrame(list(shops_tb.find()))
-# comments_data = DataFrame(list(comments_tb.find()))
+shops_data = DataFrame(list(shops_tb.find()))
+comments_data = DataFrame(list(comments_tb.find()))
 
 def change1(name):
     if name is np.nan:
@@ -94,10 +95,10 @@ def comments_convert(data):
     data['year'] = data['comment_time'].apply(lambda x: int(x[0:4]) if x is not np.nan else x)
     data['month'] = data['comment_time'].apply(lambda x: int(x[5:7]) if x is not np.nan else x)
     data['day'] = data['comment_time'].apply(lambda x: x[0:10] if x is not np.nan else x)
-    data['comment_grade'] = data['comment_grade'].apply(changeCommentGrade)
+    data['comment_score'] = data['comment_score'].apply(changeCommentGrade)
     data['week'] = data['day'].apply(week)
     data['weekday'] = data['day'].apply(lambda x:pd.to_datetime(x).weekday())
-    data['pingjia'] = data['comment_grade'].apply(change2)
+    data['pingjia'] = data['comment_score'].apply(change2)
 
    # data['yearMonth'] = data.apply(lambda x:'%s.%s' %(data['year'],data['month']),axis = 1);
     data['yearMonth'] = data['year'].astype(str) + '.' + data['month'].astype(str)
@@ -364,10 +365,10 @@ def getGradesAllJq(jq,platform,startYear,endYear,startDate,endDate,time):
         for year in range(int(startYear), int(endYear) + 1):
             jq_comment_year = jq_comment_data[
                 (jq_comment_data['data_website'] == platform) & (jq_comment_data['year'] == int(year))];
-            if(round(jq_comment_year['comment_grade'].mean() is np.nan)):
+            if(round(jq_comment_year['comment_score'].mean() is np.nan)):
               values.append(0);
             else:
-              values.append(round(jq_comment_year['comment_grade'].mean(), 1));
+              values.append(round(jq_comment_year['comment_score'].mean(), 1));
             dates.append(year);
 
 
@@ -399,10 +400,10 @@ def getCommentsCircularAnalysis(jq,platform,startYear,endYear,startDate,endDate,
                 (jq_comment_data['data_website'] == platform) & (jq_comment_data['year'] == int(year))];
 
             commentsValues.append(jq_comments.iloc[:, 0].size);
-            if (round(jq_comments['comment_grade'].mean() is np.nan)):
+            if (round(jq_comments['comment_score'].mean() is np.nan)):
                 gradesValues.append(0);
             else:
-                gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
             dates.append(year);
 
     else:
@@ -416,10 +417,10 @@ def getCommentsCircularAnalysis(jq,platform,startYear,endYear,startDate,endDate,
                             (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
 
                         commentsValues.append(jq_comments.iloc[:, 0].size);
-                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                        if (round(jq_comments['comment_score'].mean() is np.nan)):
                             gradesValues.append(0);
                         else:
-                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                            gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
                         dates.append(yearDates);
                 elif (int(year) == int(endYear)):
 
@@ -428,10 +429,10 @@ def getCommentsCircularAnalysis(jq,platform,startYear,endYear,startDate,endDate,
                         jq_comments = jq_comment_data[
                             (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
                         commentsValues.append(jq_comments.iloc[:, 0].size);
-                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                        if (round(jq_comments['comment_score'].mean() is np.nan)):
                             gradesValues.append(0);
                         else:
-                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                            gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
                         dates.append(yearDates);
                 else:
 
@@ -440,10 +441,10 @@ def getCommentsCircularAnalysis(jq,platform,startYear,endYear,startDate,endDate,
                         jq_comments = jq_comment_data[
                             (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
                         commentsValues.append(jq_comments.iloc[:, 0].size);
-                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                        if (round(jq_comments['comment_score'].mean() is np.nan)):
                             gradesValues.append(0);
                         else:
-                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                            gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
                         dates.append(yearDates);
 
         else:
@@ -452,10 +453,10 @@ def getCommentsCircularAnalysis(jq,platform,startYear,endYear,startDate,endDate,
                 jq_comments = jq_comment_data[
                     (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
                 commentsValues.append(jq_comments.iloc[:, 0].size);
-                if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                if (round(jq_comments['comment_score'].mean() is np.nan)):
                     gradesValues.append(0);
                 else:
-                    gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                    gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
                 dates.append(yearDates);
 
 
@@ -489,10 +490,10 @@ def getCommentsInnerScenic(jq,platform,startYear,endYear,startDate,endDate,time)
                 (jq_comment_data['data_website'] == platform) & (jq_comment_data['year'] == int(year))];
 
             commentsValues.append(jq_comments.iloc[:, 0].size);
-            if (round(jq_comments['comment_grade'].mean() is np.nan)):
+            if (round(jq_comments['comment_score'].mean() is np.nan)):
                 gradesValues.append(0);
             else:
-                gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
             dates.append(year);
     else:
         if (int(startYear) != int(endYear)):
@@ -505,10 +506,10 @@ def getCommentsInnerScenic(jq,platform,startYear,endYear,startDate,endDate,time)
                             (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
 
                         commentsValues.append(jq_comments.iloc[:, 0].size);
-                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                        if (round(jq_comments['comment_score'].mean() is np.nan)):
                             gradesValues.append(0);
                         else:
-                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                            gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
                         dates.append(yearDates);
                 elif (int(year) == int(endYear)):
 
@@ -517,10 +518,10 @@ def getCommentsInnerScenic(jq,platform,startYear,endYear,startDate,endDate,time)
                         jq_comments = jq_comment_data[
                             (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
                         commentsValues.append(jq_comments.iloc[:, 0].size);
-                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                        if (round(jq_comments['comment_score'].mean() is np.nan)):
                             gradesValues.append(0);
                         else:
-                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                            gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
                         dates.append(yearDates);
                 else:
 
@@ -529,10 +530,10 @@ def getCommentsInnerScenic(jq,platform,startYear,endYear,startDate,endDate,time)
                         jq_comments = jq_comment_data[
                             (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
                         commentsValues.append(jq_comments.iloc[:, 0].size);
-                        if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                        if (round(jq_comments['comment_score'].mean() is np.nan)):
                             gradesValues.append(0);
                         else:
-                            gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                            gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
                         dates.append(yearDates);
 
         else:
@@ -541,10 +542,10 @@ def getCommentsInnerScenic(jq,platform,startYear,endYear,startDate,endDate,time)
                 jq_comments = jq_comment_data[
                     (jq_comment_data['data_website'] == platform) & (jq_comment_data[yearDate] == yearDates)];
                 commentsValues.append(jq_comments.iloc[:, 0].size);
-                if (round(jq_comments['comment_grade'].mean() is np.nan)):
+                if (round(jq_comments['comment_score'].mean() is np.nan)):
                     gradesValues.append(0);
                 else:
-                    gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                    gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
                 dates.append(yearDates);
     return dates,commentsValues,gradesValues;
 
@@ -573,10 +574,10 @@ def getCommentsComparedAnalysis(year, platform, startDate, endDate, time):
                 (jq_comment_data['data_website'] == platform) & (jq_comment_data['year'] == int(year))];
 
             commentsValues.append(jq_comments.iloc[:, 0].size);
-            if (round(jq_comments['comment_grade'].mean() is np.nan)):
+            if (round(jq_comments['comment_score'].mean() is np.nan)):
                 gradesValues.append(0);
             else:
-                gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
             dates.append(year);
 
     else:
@@ -588,10 +589,10 @@ def getCommentsComparedAnalysis(year, platform, startDate, endDate, time):
 
 
             commentsValues.append(jq_comments.iloc[:, 0].size);
-            if (round(jq_comments['comment_grade'].mean() is np.nan)):
+            if (round(jq_comments['comment_score'].mean() is np.nan)):
                 gradesValues.append(0);
             else:
-                gradesValues.append(round(jq_comments['comment_grade'].mean(), 1));
+                gradesValues.append(round(jq_comments['comment_score'].mean(), 1));
             dates.append(date);
 
     return dates, commentsValues, gradesValues;
@@ -637,10 +638,10 @@ def getCommentsRecentState(time,platform,jq):
 
 
             jq_comments_vaules = jq_comments[(jq_comments['yearMonth'] == str(yearDate))];
-            if (round(jq_comments_vaules['comment_grade'].mean() is np.nan)):
+            if (round(jq_comments_vaules['comment_score'].mean() is np.nan)):
                 grades += 0;
             else:
-                grades += (round(jq_comments['comment_grade'].mean(), 1));
+                grades += (round(jq_comments['comment_score'].mean(), 1));
             commentsValues += jq_comments_vaules.iloc[:, 0].size;
         gradesValues = round(grades / 12,1);
     elif time == "season":
@@ -656,10 +657,10 @@ def getCommentsRecentState(time,platform,jq):
                 yearDate = str(year) + "." + str(month)
 
                 jq_comments_vaules = jq_comments[(jq_comments['yearMonth'] == str(yearDate))];
-                if (round(jq_comments_vaules['comment_grade'].mean() is np.nan)):
+                if (round(jq_comments_vaules['comment_score'].mean() is np.nan)):
                   grades += 0;
                 else:
-                   grades += (round(jq_comments['comment_grade'].mean(), 1));
+                   grades += (round(jq_comments['comment_score'].mean(), 1));
                 commentsValues += jq_comments_vaules.iloc[:, 0].size;
         gradesValues = round(grades / 3,1);
     elif time == "month":
@@ -689,10 +690,10 @@ def getCommentsRecentState(time,platform,jq):
                  yearDay = str(year) + "-" + monthStr + "-" + dayStr;
 
                  jq_comments_vaules = jq_comments[(jq_comments['day'] == str(yearDay))];
-                 if (round(jq_comments_vaules['comment_grade'].mean() is np.nan)):
+                 if (round(jq_comments_vaules['comment_score'].mean() is np.nan)):
                      grades += 0;
                  else:
-                     grades += (round(jq_comments['comment_grade'].mean(), 1));
+                     grades += (round(jq_comments['comment_score'].mean(), 1));
                  commentsValues += jq_comments_vaules.iloc[:, 0].size;
         gradesValues = round(grades / 30,1);
     elif time == "week":
@@ -722,10 +723,10 @@ def getCommentsRecentState(time,platform,jq):
                 yearDay = str(year) + "-" + monthStr + "-" + dayStr;
 
                 jq_comments_vaules = jq_comments[(jq_comments['day'] == str(yearDay))];
-                if (round(jq_comments_vaules['comment_grade'].mean() is np.nan)):
+                if (round(jq_comments_vaules['comment_score'].mean() is np.nan)):
                     grades += 0;
                 else:
-                    grades += (round(jq_comments['comment_grade'].mean(), 1));
+                    grades += (round(jq_comments['comment_score'].mean(), 1));
                 commentsValues += jq_comments_vaules.iloc[:, 0].size;
         gradesValues = round(grades / 7,1);
 

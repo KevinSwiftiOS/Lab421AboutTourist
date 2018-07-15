@@ -134,7 +134,7 @@ def ComparedAnalysis(request):
                     "years": []
                 };
                 if platform == '所有':
-                    print(111);
+
                     allPlatforms = ['携程', '艺龙', '去哪儿', '驴妈妈', '马蜂窝', '途牛', '飞猪', '大众点评'];
                     for a,year in enumerate(years):
                         allComments = [];
@@ -159,8 +159,7 @@ def ComparedAnalysis(request):
                             "commentValue": allComments,
                             "gradeValue": allGrades
                         };
-                        print(222);
-                        print(oneValue);
+
                         resplatforms["years"].append(oneValue);
 
                 else:
@@ -172,8 +171,7 @@ def ComparedAnalysis(request):
                         "commentValue": commentsValue,
                          "gradeValue":gradeValue
                     }
-                    print(111);
-                    print(value);
+
                     resplatforms["years"].append(value);
                 comments["platforms"].append(resplatforms);
 

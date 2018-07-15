@@ -30,7 +30,7 @@
         <entry file="file://$PROJECT_DIR$/mysite/mysite/Views/ViewsCircularAnalysis.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-317">
-              <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+              <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -39,8 +39,8 @@
       <file leaf-file-name="ViewsComparedAnalysis.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mysite/mysite/Views/ViewsComparedAnalysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="680">
-              <caret line="177" column="16" lean-forward="true" selection-start-line="177" selection-start-column="16" selection-end-line="177" selection-end-column="16" />
+            <state relative-caret-position="391">
+              <caret line="160" column="26" lean-forward="false" selection-start-line="160" selection-start-column="26" selection-end-line="160" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -138,7 +138,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="-5" />
     <option name="width" value="1298" />
     <option name="height" value="735" />
@@ -205,7 +205,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="F:/Lab421/dspider-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Lab421TouristDspider" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="WebServerToolWindowFactoryState" value="false" />
   </component>
@@ -394,7 +394,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-5" y="0" width="1298" height="735" extended-state="0" />
+    <frame x="-5" y="0" width="1298" height="735" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.7230514" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -638,15 +638,15 @@
     <entry file="file://$PROJECT_DIR$/mysite/mysite/Views/ViewsCircularAnalysis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-317">
-          <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mysite/mysite/Views/ViewsComparedAnalysis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="177" column="16" lean-forward="true" selection-start-line="177" selection-start-column="16" selection-end-line="177" selection-end-column="16" />
+        <state relative-caret-position="391">
+          <caret line="160" column="26" lean-forward="false" selection-start-line="160" selection-start-column="26" selection-end-line="160" selection-end-column="26" />
           <folding />
         </state>
       </provider>

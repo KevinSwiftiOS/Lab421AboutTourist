@@ -25,7 +25,7 @@ SECRET_KEY = 'f1cmi#o=lv#yrix8(%5jpr9l90tr3k45xglgr$ok1tm&!=^6n$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
